@@ -41,6 +41,59 @@ string escolhePalavraRandom(const string* palavras, int numeroPalavras) {
     return palavras[randomIndex]; //faz o return da palavra nesse index 
 }
 
+void organizaETs(estacoes*& estacao) {
+
+    estacoes* atual = estacao->proximaEstacao;
+    estacao->proximaEstacao = nullptr;
+
+    while (atual != nullptr) {
+
+        estacoes* proxima = atual->proximaEstacao;
+
+        if (atual->idET < estacao->idET) {
+            atual->proximaEstacao = estacao;
+            estacao = atual;
+        }
+        else {
+            estacoes* anterior = estacao;
+
+            while (anterior->proximaEstacao != nullptr && (atual->idET > anterior->proximaEstacao->idET)) {
+                anterior = anterior->proximaEstacao;
+            }
+            atual->proximaEstacao = anterior->proximaEstacao;
+            anterior->proximaEstacao = atual;
+        }
+        atual = proxima;
+    }
+}
+
+// método que organiza a lista de espera
+void organizaListaEspera(carro*& carros) {
+
+    carro* atual = carros->proximoCarro; // cria uma nova lista ligada de carros
+    carros->proximoCarro = nullptr; // o próximo é null
+
+    while (atual != nullptr) { // percorre todos os carros
+        carro* proximo = atual->proximoCarro; // novo carro que recebe o próximo do carro atual
+
+        if (atual->prioritario > carros->prioritario || (atual->prioritario == carros->prioritario && atual->idCarro < carros->idCarro)) { // faz as comparações necessárias
+            atual->proximoCarro = carros; // mete esse carro na primeira posição da lista ligada
+            carros = atual; // faz a ligação
+        }
+        else { // caso não seja cumprida a condição
+            carro* anterior = carros; // cria uma nova lista ligada
+
+            while (anterior->proximoCarro != nullptr && (atual->prioritario < anterior->proximoCarro->prioritario || (atual->prioritario == anterior->proximoCarro->prioritario && atual->idCarro > anterior->proximoCarro->idCarro))) {
+                anterior = anterior->proximoCarro;
+            }
+            atual->proximoCarro = anterior->proximoCarro;
+            anterior->proximoCarro = atual;
+        }
+        atual = proximo; // vai para o próximo carro na lista ligada
+    }
+}
+
+
 // método que remove o carro da estação
 void removeCarros(estacoes* estacao) {
     while (estacao != nullptr) { // percorre todas as estações da lista ligada
@@ -74,31 +127,8 @@ void removeCarros(estacoes* estacao) {
     }
 }
 
-// método que organiza a lista de espera
-void organizaListaEspera(carro*& carros) {
-
-    carro* carroAtual = carros->proximoCarro; // cria uma nova lista ligada de carros
-    carros->proximoCarro = nullptr; // o próximo é null
-    while (carroAtual != nullptr) { // percorre todos os carros
-        carro* proximo = carroAtual->proximoCarro; // novo carro que recebe o próximo do carro atual
-        if (carroAtual->prioritario > carros->prioritario || (carroAtual->prioritario == carros->prioritario && carroAtual->idCarro < carros->idCarro)) { // faz as comparações necessárias
-            carroAtual->proximoCarro = carros; // mete esse carro na primeira posição da lista ligada
-            carros = carroAtual; // faz a ligação
-        }
-        else { // caso não seja cumprida a condição
-            carro* carroAnterior = carros; // cria uma nova lista ligada
-            while (carroAnterior->proximoCarro != nullptr && (carroAtual->prioritario < carroAnterior->proximoCarro->prioritario || (carroAtual->prioritario == carroAnterior->proximoCarro->prioritario && carroAtual->idCarro > carroAnterior->proximoCarro->idCarro))) {
-                carroAnterior = carroAnterior->proximoCarro;
-            }
-            carroAtual->proximoCarro = carroAnterior->proximoCarro;
-            carroAnterior->proximoCarro = carroAtual;
-        }
-        carroAtual = proximo; // vai para o próximo carro na lista ligada
-    }
-}
-
 // método para criar os carros do ciclo
-void criarCarro(carro*& carros, int& numCarros, int& numCarrosTotal, int& numeroPalavrasMarcas, int& numeroPalavrasModelos, estacoes*& estacao, string marcas[], string modelos[]) {
+void criarCarro(carro*& carros, int& numCarrosTotal, int& numeroPalavrasMarcas, int& numeroPalavrasModelos, estacoes*& estacao, string marcas[], string modelos[]) {
 
     int numCarrosCriados = 0;
 
@@ -126,7 +156,6 @@ void criarCarro(carro*& carros, int& numCarros, int& numCarrosTotal, int& numero
                 carros = novoCarro;
 
                 numCarrosCriados++; // atualiza a variavel de carros criados
-                numCarros++; //atualiza a variavel numCarros
                 numCarrosTotal++; //atualiza a variavel numCarrosTotal
             }
             tempEstacao = tempEstacao->proximaEstacao; // vai para a proxima estação
@@ -192,7 +221,7 @@ void adicionaCarroET(carro*& carros, estacoes*& estacao) {
 }
 
 // método para criar os 10 primeiros carros totalmente aleatorios
-void primeirosCarros(carro*& carros, string marcas[], string modelos[], int& numeroPalavrasMarcas, int& numeroPalavrasModelos, int& numCarros, int& numCarrosTotal) {
+void primeirosCarros(carro*& carros, string marcas[], string modelos[], int& numeroPalavrasMarcas, int& numeroPalavrasModelos, int& numCarrosTotal) {
     for (int i = 0; i < 10; i++) // faz um loop de 10 iterações
     {
         string marcaRandom = escolhePalavraRandom(marcas, numeroPalavrasMarcas); // seleciona uma marca random do ficheiro
@@ -211,7 +240,6 @@ void primeirosCarros(carro*& carros, string marcas[], string modelos[], int& num
         novoCarro->proximoCarro = carros;
         carros = novoCarro;
 
-        numCarros++; // atualiza a variavel numCarros
         numCarrosTotal++; // atualiza a variavel numCarrosTotal
     }
 }
@@ -263,38 +291,18 @@ void printCars(carro* carros) {
     }
 }
 
-void printETs(estacoes* estacao, int& numEstacoes) {
+void printETs(estacoes* estacao) {
 
-    estacoes* proxima = estacao;
-
-    // create array of pointers to nodes
-    estacoes** estacoesArray = new estacoes * [numEstacoes];
-    int i = 0;
-    // proxima = estacao;
-    while (proxima != nullptr) {
-        estacoesArray[i] = proxima;
-        i++;
-        proxima = proxima->proximaEstacao;
-    }
-
-    // sort array based on idET
-    sort(estacoesArray, estacoesArray + numEstacoes, [](estacoes* a, estacoes* b) {
-        return a->idET < b->idET;
-    });
-
-    for (int i = 0; i < numEstacoes; i++) {
-        estacoes* estacaoAtual = estacoesArray[i];
+    while (estacao != nullptr) {
         cout << "\nEstação ";
-        cout << "ID: " << estacaoAtual->idET << " | "
-            << "Mecânico: " << estacaoAtual->mecanico << " | "
-            << "Capacidade: " << estacaoAtual->capacidade << " | "
-            << "Carros: " << estacaoAtual->quantidadeCarros << " | "
-            << "Marca: " << estacaoAtual->marcaEspecializada << " | "
-            << "Total Faturação: " << estacaoAtual->faturacao << "$\n\n";
+        cout << "ID: " << estacao->idET << " | "
+            << "Mecânico: " << estacao->mecanico << " | "
+            << "Capacidade: " << estacao->capacidade << " | "
+            << "Carros: " << estacao->quantidadeCarros << " | "
+            << "Marca: " << estacao->marcaEspecializada << " | "
+            << "Total Faturação: " << estacao->faturacao << "$\n\n";
 
-        carro* carroAtual = estacaoAtual->primeiroCarro;
-
-        for (int j = 0; j < estacaoAtual->quantidadeCarros; j++) {
+        for (carro* carroAtual = estacao->primeiroCarro; carroAtual != nullptr; carroAtual = carroAtual->proximoCarro) {
 
             cout << "Carro ID: " << carroAtual->idCarro << " | "
                 << "Marca: " << carroAtual->marca << " | "
@@ -302,14 +310,11 @@ void printETs(estacoes* estacao, int& numEstacoes) {
                 << "Prioritário: " << (carroAtual->prioritario ? "Sim" : "Não") << " | "
                 << "Tempo de reparação: " << carroAtual->tempoMax << " | "
                 << "Dias na oficina: " << carroAtual->dias << "\n";
-            carroAtual = carroAtual->proximoCarro;
         }
-
         cout << "-------------------------- \n";
 
-        // estacaoAtual = estacaoAtual->proximaEstacao;
+        estacao = estacao->proximaEstacao;
     }
-    delete[] estacoesArray;
 }
 
 // método que faz o output inicial a pedir os ficheiros, e pede os inputs para fazer os ciclos ou a gestao
@@ -334,8 +339,8 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, string marcas[]
 
             //uploadEstacao(estacao, numEstacoes, numCarrosTotal);
             //uploadFilaDeEspera(numCarros, carros, numCarrosTotal);
-            //printETs(estacao, numEstacoes);
-            //printCars(carros, numCarros);
+            printETs(estacao);
+            printCars(carros);
             ficheiros = false;
 
             break;
@@ -344,11 +349,13 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, string marcas[]
 
             ficheiros = false;
 
-            primeirosCarros(carros, marcas, modelos, numeroPalavrasMarcas, numeroPalavrasModelos, numCarros, numCarrosTotal);
+            primeirosCarros(carros, marcas, modelos, numeroPalavrasMarcas, numeroPalavrasModelos, numCarrosTotal);
 
             estacaoTrabalho(estacao, numET, numEstacoes, numeroPalavrasMarcas, marcas);
 
-            printETs(estacao, numEstacoes);
+            organizaETs(estacao);
+
+            printETs(estacao);
 
             organizaListaEspera(carros);
 
@@ -377,11 +384,13 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, string marcas[]
 
             adicionaCarroET(carros, estacao);
 
-            criarCarro(carros, numCarros, numCarrosTotal, numeroPalavrasMarcas, numeroPalavrasModelos, estacao, marcas, modelos);
+            criarCarro(carros, numCarrosTotal, numeroPalavrasMarcas, numeroPalavrasModelos, estacao, marcas, modelos);
 
             removeCarros(estacao);
 
-            printETs(estacao, numEstacoes);
+            organizaETs(estacao);
+
+            printETs(estacao);
 
             organizaListaEspera(carros);
 
@@ -391,7 +400,7 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, string marcas[]
 
         case 'g':
 
-            //gestao(estacao, numEstacoes, marcas, numeroPalavrasMarcas, numCarros, carros, numCarrosTotal);
+            gestao(estacao, numEstacoes, marcas, numeroPalavrasMarcas, numCarros, carros, numCarrosTotal);
 
             break;
 
