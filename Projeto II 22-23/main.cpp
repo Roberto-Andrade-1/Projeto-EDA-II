@@ -16,17 +16,22 @@ int main() {
     int numeroPalavrasMarcas = 0;
     int numeroPalavrasModelos = 0;
 
-    string* marcas = lerFicheiro("marcas.txt", numeroPalavrasMarcas);
-    string* modelos = lerFicheiro("modelos.txt", numeroPalavrasModelos);
+    marcas* marca = nullptr;
+
+    modelos* modelo = nullptr;
+
+    lerMarcas("marcas.txt", marca);
+    lerModelos("modelos.txt", modelo);
 
     carro* carros = nullptr;
 
     estacoes* estacao = nullptr;
 
-    menu(numeroPalavrasMarcas, numeroPalavrasModelos, marcas, modelos, carros, estacao);
+    arvoreReparados* arvores = nullptr;
 
-    delete[] marcas;
-    delete[] modelos;
+    menu(numeroPalavrasMarcas, numeroPalavrasModelos, marca, modelo, carros, estacao);
+
+    limpaMarcas();
 
     return 0;
 }

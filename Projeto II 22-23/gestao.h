@@ -3,4 +3,8 @@
 #include "structs.h"
 #include "gestao.h"
 
-void gestao(estacoes*& estacao, int numEstacoes, string marcas[], int& numeroPalavrasMarcas, int numCarros, carro*& carros, int& numCarrosTotal);
+void uploadEstacao(estacoes*& estacao, int& numEstacoes, int& numCarrosTotal);
+
+void uploadFilaDeEspera(carro*& carros, int& numCarrosTotal);
+
+void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int& numeroPalavrasMarcas, int numCarros, carro*& carros, int& numCarrosTotal);

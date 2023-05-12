@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdio>
 #include <string>
 #include <stdlib.h>
 #include <time.h>
@@ -12,33 +13,155 @@
 using namespace std;
 
 //método para ler os ficheiros
-string* lerFicheiro(const string& nomeFicheiro, int& numeroPalavras) {
-    ifstream ficheiro(nomeFicheiro); // dá um nome ao ficheiro aberto
-    string* palavras = nullptr; //um apontador a null para obter as palavras
-    string linha; //variavel para as linhas
-    numeroPalavras = 0; //variavel a zero do numero de palavras lidas
+void lerMarcas(const string& nomeFicheiro, marcas*& marca) {
+    ifstream ficheiro(nomeFicheiro);
+    string marcaCarro;
 
-    while (getline(ficheiro, linha)) { //equanto tiver linhas faz estas operações
-        istringstream linhaStream(linha); //se for uma linha 
-        string palavra;
-        while (linhaStream >> palavra) {
-            string* temp = new string[numeroPalavras + 1];
-            for (int i = 0; i < numeroPalavras; i++) {
-                temp[i] = palavras[i];
+    if (ficheiro.is_open()) {
+        while (getline(ficheiro, marcaCarro)) {
+            marcas* novaMarca = new marcas();
+            novaMarca->marca = marcaCarro;
+            novaMarca->proximaMarca = nullptr;
+
+            if (marca == nullptr) {
+                marca = novaMarca;
             }
-            temp[numeroPalavras] = palavra;
-            delete[] palavras;
-            palavras = temp;
-            numeroPalavras++;
+            else {
+                marcas* ultima = marca;
+                while (ultima->proximaMarca != nullptr) {
+                    ultima = ultima->proximaMarca;
+                }
+                ultima->proximaMarca = novaMarca;
+            }
         }
+        ficheiro.close();
     }
-    return palavras;
+}
+
+
+void lerModelos(const string& nomeFicheiro, modelos*& modelo){
+    ifstream ficheiro(nomeFicheiro);
+    string modeloCarro;
+
+    if (ficheiro.is_open()) {
+        while (getline(ficheiro, modeloCarro)) {
+            modelos* novaMarca = new modelos();
+            novaMarca->modelo = modeloCarro;
+            novaMarca->proximoModelo = nullptr;
+
+            if (modelo == nullptr) {
+                modelo = novaMarca;
+            }
+            else {
+                modelos* ultima = modelo;
+                while (ultima->proximoModelo != nullptr) {
+                    ultima = ultima->proximoModelo;
+                }
+                ultima->proximoModelo = novaMarca;
+            }
+        }
+        ficheiro.close();
+    }
+}
+
+string escolhePalavraRandomMarcas(marcas* marca) {
+    marcas* temp = marca;
+    int numeroPalavras = 0;
+
+    while (temp != nullptr) {
+        numeroPalavras++;
+        temp = temp->proximaMarca;
+    }
+
+    if (marca == nullptr) {
+        return "";
+    }
+
+    int numeroRandom = rand() % numeroPalavras;
+
+    marcas* atual = marca;
+    int indexAtual = 0;
+
+    while (atual != nullptr) {
+        if (indexAtual == numeroRandom) {
+            return atual->marca;
+        }
+        atual = atual->proximaMarca;
+        indexAtual++;
+    }
+    return "";
 }
 
 //metodo para escolher uma palavra random
-string escolhePalavraRandom(const string* palavras, int numeroPalavras) {
-    int randomIndex = rand() % numeroPalavras; //obtem o resto da divisao do rand a dividir pelo número de palavras do ficheiro
-    return palavras[randomIndex]; //faz o return da palavra nesse index 
+string escolhePalavraRandomModelos(modelos* modelo) {
+
+    modelos* temp = modelo;
+    int numeroPalavras = 0;
+
+    while (temp != nullptr) {
+        numeroPalavras++;
+        temp = temp->proximoModelo;
+    }
+
+    if (modelo == nullptr) {
+        return "";
+    }
+
+    int numeroRandom = rand() % numeroPalavras;
+
+    modelos* atual = modelo;
+    int indexAtual = 0;
+
+    while (atual != nullptr) {
+        if (indexAtual == numeroRandom) {
+            return atual->modelo;
+        }
+        atual = atual->proximoModelo;
+        indexAtual++;
+    }
+    return "";
+}
+
+//void inserirCarroPorModelo(arvoreReparados*& raiz, int idDaET,carro* atual) {
+//    if (raiz == nullptr) {
+//        raiz = new arvoreReparados();
+//        raiz->idDaET = idDaET;
+//        raiz->marca = atual->marca;
+//        raiz->modelo = atual->modelo;
+//        raiz->esquerda = nullptr;
+//        raiz->direita = nullptr;
+//    }
+//    else if (atual->modelo < raiz->modelo) {
+//        inserirCarroPorModelo(raiz->esquerda, idDaET, atual);
+//    }
+//    else {
+//        inserirCarroPorModelo(raiz->direita, idDaET, atual);
+//    }
+//}
+
+
+//void inserirCarro(arvoreReparados*& raiz, estacoes* estacao, carro* atual) {
+//    
+//
+//}
+
+void criarArvores(arvoreReparados*& arvores, estacoes*& estacao) {
+
+    while (estacao != nullptr) {
+        arvoreReparados* novaArvore = new arvoreReparados();
+
+        novaArvore->idDaET = estacao->idET;
+        novaArvore->marca = estacao->marcaEspecializada;
+        novaArvore->modelo = "";
+        novaArvore->direita = nullptr;
+        novaArvore->esquerda = nullptr;
+        novaArvore->proximaArvore = nullptr;
+
+        novaArvore->proximaArvore = arvores;
+        arvores = novaArvore;
+
+        estacao = estacao->proximaEstacao;
+    }
 }
 
 void organizaETs(estacoes*& estacao) {
@@ -108,6 +231,8 @@ void removeCarros(estacoes* estacao) {
                 cout << "O carro com ID " << atual->idCarro << " foi removido da estação " << estacao->idET << ".\n";
                 estacao->faturacao += (atual->dias * 50); //adiciona ao valor da faturação da estação
 
+                //invocar a funcao que poe o carro na arvore certa
+
                 if (anterior == nullptr) { // se não tiver carro antes do que vai ser removido
                     estacao->primeiroCarro = atual->proximoCarro; // o primeiro carro da ET passa a ser o seguinte do atual
                 }
@@ -128,14 +253,14 @@ void removeCarros(estacoes* estacao) {
 }
 
 // método para criar os carros do ciclo
-void criarCarro(carro*& carros, int& numCarrosTotal, int& numeroPalavrasMarcas, int& numeroPalavrasModelos, estacoes*& estacao, string marcas[], string modelos[]) {
+void criarCarro(carro*& carros, int& numCarrosTotal, int& numeroPalavrasMarcas, int& numeroPalavrasModelos, estacoes*& estacao, marcas*& marca, modelos*& modelo) {
 
     int numCarrosCriados = 0;
 
     while(numCarrosCriados < 10) // só cria 10 carros
     {
-        string marcaRandom = escolhePalavraRandom(marcas, numeroPalavrasMarcas); // vai buscar uma marca random do ficheiro
-        string modeloRandom = escolhePalavraRandom(modelos, numeroPalavrasModelos); // vai buscar um modelo random do ficheiro
+        string marcaRandom = escolhePalavraRandomMarcas(marca); // vai buscar uma marca random do ficheiro
+        string modeloRandom = escolhePalavraRandomModelos(modelo); // vai buscar um modelo random do ficheiro
 
         estacoes* tempEstacao = estacao; // lista ligada temporaria para conseguir percorrer todas as estações, sem isto após a iteração por todas as estações pela primeira vez no for loop ia ficar a null
 
@@ -221,11 +346,11 @@ void adicionaCarroET(carro*& carros, estacoes*& estacao) {
 }
 
 // método para criar os 10 primeiros carros totalmente aleatorios
-void primeirosCarros(carro*& carros, string marcas[], string modelos[], int& numeroPalavrasMarcas, int& numeroPalavrasModelos, int& numCarrosTotal) {
+void primeirosCarros(carro*& carros, marcas*& marca, modelos*& modelo, int& numeroPalavrasMarcas, int& numeroPalavrasModelos, int& numCarrosTotal) {
     for (int i = 0; i < 10; i++) // faz um loop de 10 iterações
     {
-        string marcaRandom = escolhePalavraRandom(marcas, numeroPalavrasMarcas); // seleciona uma marca random do ficheiro
-        string modeloRandom = escolhePalavraRandom(modelos, numeroPalavrasModelos);// seleciona um modelo random do ficheiro
+        string marcaRandom = escolhePalavraRandomMarcas(marca); // seleciona uma marca random do ficheiro
+        string modeloRandom = escolhePalavraRandomModelos(modelo);// seleciona um modelo random do ficheiro
 
         carro* novoCarro = new carro();
 
@@ -245,14 +370,14 @@ void primeirosCarros(carro*& carros, string marcas[], string modelos[], int& num
 }
 
 
-void estacaoTrabalho(estacoes*& estacao, int& numET, int& numEstacoes, int& numeroPalavrasMarcas, string marcas[]) {
+void estacaoTrabalho(estacoes*& estacao, int& numET, int& numEstacoes, int& numeroPalavrasMarcas, marcas*& marca) {
 
     string nome; // variavel para guardar o nome do mecanico
     getline(cin, nome); // recebe o input do usuario
 
     for (int i = 0; i < numET; i++) {
 
-        string marcaRandom = escolhePalavraRandom(marcas, numeroPalavrasMarcas);
+        string marcaRandom = escolhePalavraRandomMarcas(marca);
 
         cout << "Dê um nome ao mecânico " << i + 1 << ": \n"; // põe na consola a mensagem para dar um nome
         getline(cin, nome); // recebe o input do usuario
@@ -317,8 +442,37 @@ void printETs(estacoes* estacao) {
     }
 }
 
+void limpaMarcas() {
+
+    ifstream marcas("marcas.txt");
+
+    if (marcas.is_open()) {
+        ofstream marcasTemp("temp.txt");
+
+        if (marcasTemp.is_open()) {
+            string linha;
+            int numeroLinha = 1;
+            int comecaLinha = 46;
+
+            while (getline(marcas, linha)) {
+                if (numeroLinha <= comecaLinha) {
+                    marcasTemp << linha << "\n";
+                }
+                numeroLinha++;
+            }
+
+            marcas.close();
+            marcasTemp.close();
+
+            remove("marcas.txt");
+            rename("temp.txt", "marcas.txt");
+        }
+    }
+}
+
+
 // método que faz o output inicial a pedir os ficheiros, e pede os inputs para fazer os ciclos ou a gestao
-void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, string marcas[], string modelos[], carro*& carros, estacoes*& estacao) {
+void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca, modelos*& modelo, carro*& carros, estacoes*& estacao) {
 
     char escolha;
     int numCarros = 0;
@@ -337,8 +491,9 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, string marcas[]
         {
         case 's':
 
-            //uploadEstacao(estacao, numEstacoes, numCarrosTotal);
-            //uploadFilaDeEspera(numCarros, carros, numCarrosTotal);
+            uploadEstacao(estacao, numEstacoes, numCarrosTotal);
+            uploadFilaDeEspera(carros, numCarrosTotal);
+            //upload das arvores, senão não dá para imprimir
             printETs(estacao);
             printCars(carros);
             ficheiros = false;
@@ -349,9 +504,9 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, string marcas[]
 
             ficheiros = false;
 
-            primeirosCarros(carros, marcas, modelos, numeroPalavrasMarcas, numeroPalavrasModelos, numCarrosTotal);
+            primeirosCarros(carros, marca, modelo, numeroPalavrasMarcas, numeroPalavrasModelos, numCarrosTotal);
 
-            estacaoTrabalho(estacao, numET, numEstacoes, numeroPalavrasMarcas, marcas);
+            estacaoTrabalho(estacao, numET, numEstacoes, numeroPalavrasMarcas, marca);
 
             organizaETs(estacao);
 
@@ -384,7 +539,7 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, string marcas[]
 
             adicionaCarroET(carros, estacao);
 
-            criarCarro(carros, numCarrosTotal, numeroPalavrasMarcas, numeroPalavrasModelos, estacao, marcas, modelos);
+            criarCarro(carros, numCarrosTotal, numeroPalavrasMarcas, numeroPalavrasModelos, estacao, marca, modelo);
 
             removeCarros(estacao);
 
@@ -400,7 +555,7 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, string marcas[]
 
         case 'g':
 
-            gestao(estacao, numEstacoes, marcas, numeroPalavrasMarcas, numCarros, carros, numCarrosTotal);
+            gestao(estacao, numEstacoes, marca, numeroPalavrasMarcas, numCarros, carros, numCarrosTotal);
 
             break;
 

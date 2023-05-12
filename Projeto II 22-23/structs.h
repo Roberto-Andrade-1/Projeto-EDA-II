@@ -4,6 +4,16 @@
 
 using namespace std;
 
+struct modelos {
+    string modelo;
+    modelos* proximoModelo;
+};
+
+struct marcas {
+    string marca;
+    marcas* proximaMarca;
+};
+
 struct carro
 {
     int idCarro;
@@ -29,8 +39,10 @@ struct estacoes
 
 struct arvoreReparados
 {
+    int idDaET;
     string marca;
     string modelo;
     arvoreReparados* esquerda;
     arvoreReparados* direita;
+    arvoreReparados* proximaArvore;
 };
