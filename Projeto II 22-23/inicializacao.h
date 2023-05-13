@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include <string>
 #include <stdlib.h>
 #include "structs.h"
@@ -15,11 +14,15 @@ string escolhePalavraRandomMarcas(marcas* marca);
 
 string escolhePalavraRandomModelos(modelos* modelo);
 
+void inserirCarroNaArvore(arvoreReparados*& arvores, int idDaET, carro*& carroAInserir);
+
+void criarArvores(arvoreReparados*& arvores, estacoes*& estacao);
+
 void organizaETs(estacoes*& estacao);
 
 void organizaListaEspera(carro*& carros);
 
-void removeCarros(estacoes* estacao);
+void removeCarros(estacoes*& estacao, arvoreReparados*& arvores);
 
 void criarCarro(carro*& carros, int& numCarrosTotal, int& numeroPalavrasMarcas, int& numeroPalavrasModelos, estacoes*& estacao, marcas*& marca, modelos*& modelo);
 
@@ -35,6 +38,6 @@ void printCars(carro* carros);
 
 void printETs(estacoes* estacao);
 
-void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca, modelos*& modelo, carro*& carros, estacoes*& estacao);
-
 void limpaMarcas();
+
+void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca, modelos*& modelo, carro*& carros, estacoes*& estacao, arvoreReparados*& arvores);

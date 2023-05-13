@@ -29,7 +29,7 @@ int main() {
 
     arvoreReparados* arvores = nullptr;
 
-    menu(numeroPalavrasMarcas, numeroPalavrasModelos, marca, modelo, carros, estacao);
+    menu(numeroPalavrasMarcas, numeroPalavrasModelos, marca, modelo, carros, estacao, arvores);
 
     limpaMarcas();
 

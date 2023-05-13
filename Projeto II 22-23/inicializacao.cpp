@@ -122,45 +122,64 @@ string escolhePalavraRandomModelos(modelos* modelo) {
     return "";
 }
 
-//void inserirCarroPorModelo(arvoreReparados*& raiz, int idDaET,carro* atual) {
-//    if (raiz == nullptr) {
-//        raiz = new arvoreReparados();
-//        raiz->idDaET = idDaET;
-//        raiz->marca = atual->marca;
-//        raiz->modelo = atual->modelo;
-//        raiz->esquerda = nullptr;
-//        raiz->direita = nullptr;
-//    }
-//    else if (atual->modelo < raiz->modelo) {
-//        inserirCarroPorModelo(raiz->esquerda, idDaET, atual);
-//    }
-//    else {
-//        inserirCarroPorModelo(raiz->direita, idDaET, atual);
-//    }
-//}
 
+void inserirCarroNaArvore(arvoreReparados*& arvores, int idDaET, carro*& carroAInserir) {
+    arvoreReparados* temp = arvores;
 
-//void inserirCarro(arvoreReparados*& raiz, estacoes* estacao, carro* atual) {
-//    
-//
-//}
+   while (temp != nullptr) {
+        if (temp->idDaET == idDaET) {
+            arvoreReparados* novoCarro = new arvoreReparados();
+            novoCarro->idDaET = idDaET;
+            novoCarro->marca = carroAInserir->marca;
+            novoCarro->modelo = carroAInserir->modelo;
+            novoCarro->esquerda = nullptr;
+            novoCarro->direita = nullptr;
+            novoCarro->proximaArvore = nullptr;
+
+            if (temp->esquerda == nullptr) {
+                temp->esquerda = novoCarro;
+            }
+            else if (carroAInserir->modelo < temp->modelo) {
+                inserirCarroNaArvore(temp->esquerda, idDaET, carroAInserir);
+            }
+            else {
+                inserirCarroNaArvore(temp->direita, idDaET, carroAInserir);
+            }
+
+            break; // Exit the loop after inserting the car
+        }
+
+        temp = temp->proximaArvore;
+    }
+}
+
 
 void criarArvores(arvoreReparados*& arvores, estacoes*& estacao) {
 
-    while (estacao != nullptr) {
+    estacoes* temp = estacao;
+
+    while (temp != nullptr) {
         arvoreReparados* novaArvore = new arvoreReparados();
 
-        novaArvore->idDaET = estacao->idET;
-        novaArvore->marca = estacao->marcaEspecializada;
+        novaArvore->idDaET = temp->idET;
+        novaArvore->marca = temp->marcaEspecializada;
         novaArvore->modelo = "";
         novaArvore->direita = nullptr;
         novaArvore->esquerda = nullptr;
         novaArvore->proximaArvore = nullptr;
 
-        novaArvore->proximaArvore = arvores;
-        arvores = novaArvore;
+        if (arvores == nullptr) {
+            arvores = novaArvore;
+        }
+        else {
+            arvoreReparados* ultimaArvore = arvores;
+            while (ultimaArvore->proximaArvore != nullptr) {
+                ultimaArvore = ultimaArvore->proximaArvore;
+            }
+            ultimaArvore->proximaArvore = novaArvore;
+        }
 
-        estacao = estacao->proximaEstacao;
+        temp = temp->proximaEstacao;
     }
 }
 
@@ -218,9 +237,12 @@ void organizaListaEspera(carro*& carros) {
 
 
 // método que remove o carro da estação
-void removeCarros(estacoes* estacao) {
-    while (estacao != nullptr) { // percorre todas as estações da lista ligada
-        carro* atual = estacao->primeiroCarro; // recebe a lista ligada de carros da estacao
+void removeCarros(estacoes*& estacao, arvoreReparados*& arvores) {
+
+    estacoes* temp = estacao;
+
+    while (temp != nullptr) { // percorre todas as estações da lista ligada
+        carro* atual = temp->primeiroCarro; // recebe a lista ligada de carros da estacao
         carro* anterior = nullptr; // cria um anterior a null
 
         while (atual != nullptr) { // vê todos os carros nessa ET
@@ -228,27 +250,27 @@ void removeCarros(estacoes* estacao) {
 
             if ((atual->dias == atual->tempoMax) || (rand() % 20 <= 2)) // se os dias forem iguais ao maximo ou se a probabilidade for cumprida
             {
-                cout << "O carro com ID " << atual->idCarro << " foi removido da estação " << estacao->idET << ".\n";
-                estacao->faturacao += (atual->dias * 50); //adiciona ao valor da faturação da estação
+                cout << "O carro com ID " << atual->idCarro << " foi removido da estação " << temp->idET << ".\n";
+                temp->faturacao += (atual->dias * 50); //adiciona ao valor da faturação da estação
 
-                //invocar a funcao que poe o carro na arvore certa
+                inserirCarroNaArvore(arvores, temp->idET, atual);
 
                 if (anterior == nullptr) { // se não tiver carro antes do que vai ser removido
-                    estacao->primeiroCarro = atual->proximoCarro; // o primeiro carro da ET passa a ser o seguinte do atual
+                    temp->primeiroCarro = atual->proximoCarro; // o primeiro carro da ET passa a ser o seguinte do atual
                 }
                 else {
                     anterior->proximoCarro = atual->proximoCarro; // caso contrario o seguinte do carro anterior é o proximo ao carro que está a ser removido
                 }
                 delete atual; // remove o atual
-                atual = anterior == nullptr ? estacao->primeiroCarro : anterior->proximoCarro; // 
-                estacao->quantidadeCarros--; // diminui a quantidade de carros atual na ET
+                atual = anterior == nullptr ? temp->primeiroCarro : anterior->proximoCarro; // 
+                temp->quantidadeCarros--; // diminui a quantidade de carros atual na ET
             }
             else { // caso as condições não sejam cumpridas
                 anterior = atual;
                 atual = atual->proximoCarro;
             }
         }
-        estacao = estacao->proximaEstacao; // passa para a próxima estação
+        temp = temp->proximaEstacao; // passa para a próxima estação
     }
 }
 
@@ -472,7 +494,7 @@ void limpaMarcas() {
 
 
 // método que faz o output inicial a pedir os ficheiros, e pede os inputs para fazer os ciclos ou a gestao
-void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca, modelos*& modelo, carro*& carros, estacoes*& estacao) {
+void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca, modelos*& modelo, carro*& carros, estacoes*& estacao, arvoreReparados*& arvores) {
 
     char escolha;
     int numCarros = 0;
@@ -508,6 +530,8 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca,
 
             estacaoTrabalho(estacao, numET, numEstacoes, numeroPalavrasMarcas, marca);
 
+            criarArvores(arvores, estacao);
+
             organizaETs(estacao);
 
             printETs(estacao);
@@ -541,7 +565,7 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca,
 
             criarCarro(carros, numCarrosTotal, numeroPalavrasMarcas, numeroPalavrasModelos, estacao, marca, modelo);
 
-            removeCarros(estacao);
+            removeCarros(estacao, arvores);
 
             organizaETs(estacao);
 
@@ -555,7 +579,7 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca,
 
         case 'g':
 
-            gestao(estacao, numEstacoes, marca, numeroPalavrasMarcas, numCarros, carros, numCarrosTotal);
+            gestao(estacao, numEstacoes, marca, numeroPalavrasMarcas, numCarros, carros, numCarrosTotal, arvores);
 
             break;
 

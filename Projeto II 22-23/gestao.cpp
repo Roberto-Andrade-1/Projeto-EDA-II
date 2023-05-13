@@ -9,6 +9,50 @@
 #include "inicializacao.h"
 #include "gestao.h"
 
+void reparacaoManual(estacoes*& estacao, arvoreReparados*& arvores) {
+
+	string marcaCarro;
+	string modeloCarro;
+
+	getline(cin, marcaCarro);
+	cout << "\nIntroduza a marca do carro a remover: ";
+	getline(cin, marcaCarro);
+	cout << "\nIntroduza também o modelo do carro: ";
+	getline(cin, modeloCarro);
+
+	estacoes* atual = estacao;
+	while (atual != nullptr) {
+		carro* carroNaET = atual->primeiroCarro;
+		carro* anterior = nullptr;
+
+		while (carroNaET != nullptr) {
+			if (marcaCarro == carroNaET->marca && modeloCarro == carroNaET->modelo) {
+
+				cout << "\nO carro com ID " << carroNaET->idCarro << " foi removido da estação " << atual->idET << ".\n";
+				atual->faturacao += (carroNaET->dias * 50);
+
+				inserirCarroNaArvore(arvores, atual->idET, carroNaET);
+
+				if (anterior == nullptr) { // se não tiver carro antes do que vai ser removido
+					atual->primeiroCarro = carroNaET->proximoCarro; // o primeiro carro da ET passa a ser o seguinte do atual
+				}
+				else {
+					anterior->proximoCarro = carroNaET->proximoCarro; // caso contrario o seguinte do carro anterior é o proximo ao carro que está a ser removido
+				}
+
+				delete carroNaET; // remove o atual
+				carroNaET = anterior == nullptr ? atual->primeiroCarro : anterior->proximoCarro; // 
+				atual->quantidadeCarros--; // diminui a quantidade de carros atual na ET
+			}
+			else { // caso as condições não sejam cumpridas
+				anterior = carroNaET;
+				carroNaET = carroNaET->proximoCarro;
+			}
+		}
+		atual = atual->proximaEstacao;
+	}
+}
+
 void tempoReparacao(carro*& carros, int& numEstacoes, estacoes*& estacao) {
 
 	string marcaCarro;
@@ -19,7 +63,6 @@ void tempoReparacao(carro*& carros, int& numEstacoes, estacoes*& estacao) {
 	cout << "Introduza a marca do carro: ";
 	getline(cin, marcaCarro);
 
-	getline(cin, modeloCarro);
 	cout << "Introduza o modelo do carro: ";
 	getline(cin, modeloCarro);
 
@@ -454,39 +497,48 @@ void uploadEstacao(estacoes*& estacao, int& numEstacoes, int& numCarrosTotal) {
 
 }
 
-//arvoreReparados* encontrarArvorePorEstacao(arvoreReparados* arvore, int idDaET) {
-//
-//	
-//}
 
-//void imprimeArvore(arvoreReparados* raiz, int nivel) {
-//	if (raiz == nullptr) {
-//		return;
-//	}
-//
-//	imprimeArvore(raiz->direita, nivel + 1);
-//
-//	for (int i = 0; i < nivel; i++) {
-//		cout << "\t";
-//	}
-//
-//	cout << "Marca: " << raiz->marca << " - Modelo: " << raiz->modelo << endl;
-//
-//	imprimeArvore(raiz->esquerda, nivel + 1);
-//}
+void imprimeArvore(arvoreReparados* arvores, int nivel) {
 
-//void imprimirArvorePorEstacao(arvoreReparados* arvore, int idDaET) {
-//	arvoreReparados* estacaoTree = encontrarArvorePorEstacao(arvore, idDaET);
-//	if (estacaoTree != nullptr) {
-//		cout << "Cars for Station " << idDaET << ":" << endl;
-//		imprimeArvore(estacaoTree, 0);
-//	}
-//	else {
-//		cout << "Station " << idDaET << " not found." << endl;
-//	}
-//}
+	arvoreReparados* raiz = arvores;
 
-void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int& numeroPalavrasMarcas, int numCarros, carro*& carros, int& numCarrosTotal) {
+	if (raiz == nullptr) {
+		return;
+	}
+
+	imprimeArvore(raiz->direita, nivel + 1);
+
+	for (int i = 0; i < nivel; i++) {
+		cout << "\t";
+	}
+
+	cout << "Marca: " << raiz->marca << " - Modelo: " << raiz->modelo << endl;
+
+	imprimeArvore(raiz->esquerda, nivel + 1);
+}
+
+void imprimirArvorePorEstacao(arvoreReparados* arvores) {
+
+	int idDaET = 0;
+	cout << "\nIntroduza o ID da ET que deseja imprimir os carros reparados\n";
+	cin >> idDaET;
+
+	arvoreReparados* temp = arvores;
+
+	while (temp != nullptr) {
+		if (temp->idDaET == idDaET) {
+			imprimeArvore(temp, 0); // Call the imprimeArvore function to print the tree
+			return;
+		}
+		temp = temp->proximaArvore;
+	}
+
+	// If no tree with the specified ID is found
+	cout << "Nenhuma árvore encontrada com o ID da ET especificado." << endl;
+}
+
+
+void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int& numeroPalavrasMarcas, int numCarros, carro*& carros, int& numCarrosTotal, arvoreReparados*& arvores) {
 
 	int options;
 
@@ -506,7 +558,11 @@ void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int& numeroPala
 	{
 	case 1:
 
-		//reparacaoManual(estacao, numEstacoes, numCarros, carros);
+		reparacaoManual(estacao, arvores);
+		organizaETs(estacao);
+		printETs(estacao);
+		organizaListaEspera(carros);
+		printCars(carros);
 
 		break;
 
@@ -557,7 +613,7 @@ void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int& numeroPala
 
 	case 8:
 
-		//imprimirCarrosReparados(raiz, 0);
+		imprimirArvorePorEstacao(arvores);
 
 		break;
 
