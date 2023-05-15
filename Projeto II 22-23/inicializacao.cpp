@@ -123,27 +123,28 @@ string escolhePalavraRandomModelos(modelos* modelo) {
 }
 
 
-void inserirCarroNaArvore(arvoreReparados*& arvores, int idDaET, carro*& carroAInserir) {
+arvoreReparados* inserirCarroNaArvore(arvoreReparados*& arvores, int idDaET, carro*& carroAInserir) {
     arvoreReparados* temp = arvores;
 
-   while (temp != nullptr) {
+    while (temp != nullptr) {
         if (temp->idDaET == idDaET) {
             arvoreReparados* novoCarro = new arvoreReparados();
             novoCarro->idDaET = idDaET;
+            novoCarro->idCarro = carroAInserir->idCarro;
             novoCarro->marca = carroAInserir->marca;
             novoCarro->modelo = carroAInserir->modelo;
             novoCarro->esquerda = nullptr;
             novoCarro->direita = nullptr;
-            novoCarro->proximaArvore = nullptr;
+            novoCarro->proximaArvore = temp->proximaArvore;
 
             if (temp->esquerda == nullptr) {
                 temp->esquerda = novoCarro;
             }
             else if (carroAInserir->modelo < temp->modelo) {
-                inserirCarroNaArvore(temp->esquerda, idDaET, carroAInserir);
+                temp->esquerda = inserirCarroNaArvore(temp->esquerda, idDaET, carroAInserir);
             }
             else {
-                inserirCarroNaArvore(temp->direita, idDaET, carroAInserir);
+                temp->direita = inserirCarroNaArvore(temp->direita, idDaET, carroAInserir);
             }
 
             break; // Exit the loop after inserting the car
@@ -151,6 +152,8 @@ void inserirCarroNaArvore(arvoreReparados*& arvores, int idDaET, carro*& carroAI
 
         temp = temp->proximaArvore;
     }
+
+    return arvores;
 }
 
 
@@ -163,7 +166,6 @@ void criarArvores(arvoreReparados*& arvores, estacoes*& estacao) {
 
         novaArvore->idDaET = temp->idET;
         novaArvore->marca = temp->marcaEspecializada;
-        novaArvore->modelo = "";
         novaArvore->direita = nullptr;
         novaArvore->esquerda = nullptr;
         novaArvore->proximaArvore = nullptr;

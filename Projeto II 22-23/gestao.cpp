@@ -300,6 +300,8 @@ void adicionaET(estacoes*& estacao, marcas*& marca) {
 //método que grava as oficinas assim como os carros dentro dela
 void gravarEstacao(estacoes*& estacao, int& numEstacoes) {
 
+	estacoes* copia = estacao;
+
 	ofstream oficinas("oficinas.txt"); //cria um ficheiro com o nome
 
 	oficinas.clear(); //faz clear para limpar o ficheiro e não ficar guardado informações antigas
@@ -308,15 +310,15 @@ void gravarEstacao(estacoes*& estacao, int& numEstacoes) {
 		oficinas << "-\n";
 		oficinas << numEstacoes << "\n";
 		oficinas << "-\n";
-		while(estacao != nullptr) { //percorre todas as ETs 
-			oficinas << estacao->idET << "\n";
-			oficinas << estacao->capacidade << "\n";
-			oficinas << estacao->quantidadeCarros << "\n";
-			oficinas << estacao->faturacao << "\n";
-			oficinas << estacao->mecanico << "\n";
-			oficinas << estacao->marcaEspecializada << "\n";
+		while(copia != nullptr) { //percorre todas as ETs 
+			oficinas << copia->idET << "\n";
+			oficinas << copia->capacidade << "\n";
+			oficinas << copia->quantidadeCarros << "\n";
+			oficinas << copia->faturacao << "\n";
+			oficinas << copia->mecanico << "\n";
+			oficinas << copia->marcaEspecializada << "\n";
 
-			for (carro* carroAtual = estacao->primeiroCarro; carroAtual != nullptr; carroAtual = carroAtual->proximoCarro) { //percorre todos os carros dentro da ET
+			for (carro* carroAtual = copia->primeiroCarro; carroAtual != nullptr; carroAtual = carroAtual->proximoCarro) { //percorre todos os carros dentro da ET
 				oficinas << "--\n";
 				oficinas << carroAtual->idCarro << "\n";
 				oficinas << carroAtual->tempoMax << "\n";
@@ -326,7 +328,7 @@ void gravarEstacao(estacoes*& estacao, int& numEstacoes) {
 				oficinas << carroAtual->modelo << "\n";
 			} oficinas << "-\n";
 
-			estacao = estacao->proximaEstacao;
+			copia = copia->proximaEstacao;
 		}
 	}
 	else {
@@ -341,29 +343,23 @@ void gravarFilaDeEspera(carro*& carros) {
 
 	carro* contaCarros = carros;
 
-	while (contaCarros != nullptr) {
-		numCarros++;
-		contaCarros = contaCarros->proximoCarro;
-	}
-
 	ofstream fila("filaEspera.txt"); //cria um ficheiro com o nome
 
 	fila.clear(); //faz o clear do ficheiro
 
-
 	if (fila.is_open()) { //verifica se o ficheiro pode ser aberto para ser guardada as informações
 		fila << "-\n";
 		fila << numCarros << "\n";
-		while(carros != nullptr) { //faz o loop pela quantidade de carros na fila de espera
+		while(contaCarros != nullptr) { //faz o loop pela quantidade de carros na fila de espera
 			fila << "-\n";
-			fila << carros->idCarro << "\n";
-			fila << carros->tempoMax << "\n";
-			fila << carros->dias << "\n";
-			fila << carros->prioritario << "\n";
-			fila << carros->marca << "\n";
-			fila << carros->modelo << "\n";
+			fila << contaCarros->idCarro << "\n";
+			fila << contaCarros->tempoMax << "\n";
+			fila << contaCarros->dias << "\n";
+			fila << contaCarros->prioritario << "\n";
+			fila << contaCarros->marca << "\n";
+			fila << contaCarros->modelo << "\n";
 
-			carros = carros->proximoCarro;
+			contaCarros = contaCarros->proximoCarro;
 		}
 	}
 	else {
@@ -512,7 +508,7 @@ void imprimeArvore(arvoreReparados* arvores, int nivel) {
 		cout << "\t";
 	}
 
-	cout << "Marca: " << raiz->marca << " - Modelo: " << raiz->modelo << endl;
+	cout <<"ID: " << raiz->idCarro << "Marca: " << raiz->marca << " | Modelo: " << raiz->modelo << "\n";
 
 	imprimeArvore(raiz->esquerda, nivel + 1);
 }
@@ -606,6 +602,7 @@ void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int& numeroPala
 
 		uploadEstacao(estacao, numEstacoes, numCarrosTotal);
 		uploadFilaDeEspera(carros, numCarrosTotal);
+		lerMarcas("marcas.txt", marca);
 		printETs(estacao);
 		printCars(carros);
 

@@ -25,6 +25,14 @@ struct carro
     carro* proximoCarro;
 };
 
+struct carroReparado 
+{
+    int idCarro;
+    string marca;
+    string modelo;
+    carroReparado* proximoCarro;
+};
+
 struct estacoes
 {
     int idET;
@@ -40,6 +48,7 @@ struct estacoes
 struct arvoreReparados
 {
     int idDaET;
+    int idCarro;
     string marca;
     string modelo;
     arvoreReparados* esquerda;

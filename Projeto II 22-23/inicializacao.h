@@ -14,7 +14,7 @@ string escolhePalavraRandomMarcas(marcas* marca);
 
 string escolhePalavraRandomModelos(modelos* modelo);
 
-void inserirCarroNaArvore(arvoreReparados*& arvores, int idDaET, carro*& carroAInserir);
+arvoreReparados* inserirCarroNaArvore(arvoreReparados*& arvores, int idDaET, carro*& carroAInserir);
 
 void criarArvores(arvoreReparados*& arvores, estacoes*& estacao);
 
