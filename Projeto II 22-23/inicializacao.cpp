@@ -5,7 +5,6 @@
 #include <time.h>
 #include <fstream>
 #include <sstream>
-#include <algorithm>
 #include "structs.h"
 #include "inicializacao.h"
 #include "gestao.h"
@@ -123,16 +122,17 @@ string escolhePalavraRandomModelos(modelos* modelo) {
     return "";
 }
 
-
-carrosReparados* novoCarro(int idET, carro* carroReparado) {
+// método para criar um carro para a arvore
+carrosReparados* novoCarro(int idET, carro* carroReparado) { // recebe a et e o carro que foi arranjado
     carrosReparados* novoCarro = new carrosReparados;
     novoCarro->idET = idET;
     novoCarro->carros = carroReparado;
     novoCarro->esquerda = NULL;
-    novoCarro->direita = NULL;
+    novoCarro->direita = NULL; // cria o reparado com as variaveis certas
     return novoCarro;
 }
 
+// método para inserir o carro na arvore pela ordem correta
 void inserirNaArvore(carrosReparados*& raiz, int idET, carro* carroReparado) {
 
     if (raiz == nullptr) {
@@ -154,7 +154,6 @@ void inserirNaArvore(carrosReparados*& raiz, int idET, carro* carroReparado) {
         }
     }
 }
-
 
 // método para organizar as estações
 void organizaETs(estacoes*& estacao) {
@@ -492,7 +491,7 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca,
 
             uploadEstacao(estacao, numEstacoes, numCarrosTotal);
             uploadFilaDeEspera(carros, numCarrosTotal);
-            //upload das arvores, senão não dá para imprimir
+            uploadArvores(raiz, "arvores.txt");
             printETs(estacao);
             printCars(carros);
             removeMarcasDuplicadas(marca);
@@ -542,7 +541,7 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca,
 
             criarCarro(carros, numCarrosTotal, numeroPalavrasMarcas, numeroPalavrasModelos, estacao, marca, modelo);
 
-            removeCarros(estacao, raiz, arvores);
+            removeCarros(estacao, raiz);
 
             organizaETs(estacao);
 
@@ -556,7 +555,7 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca,
 
         case 'g':
 
-            gestao(estacao, numEstacoes, marca, numeroPalavrasMarcas, numCarros, carros, numCarrosTotal, arvores, raiz);
+            gestao(estacao, numEstacoes, marca, numeroPalavrasMarcas, numCarros, carros, numCarrosTotal, raiz);
 
             break;
 

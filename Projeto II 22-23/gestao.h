@@ -19,9 +19,15 @@ void gravarEstacao(estacoes*& estacao, int& numEstacoes);
 
 void gravarFilaDeEspera(carro*& carros);
 
+void gravarArvores(carrosReparados* raiz, ofstream& arvore);
+
+void nomeFicheiro(carrosReparados* raiz);
+
 void uploadFilaDeEspera(carro*& carros, int& numCarrosTotal);
 
 void uploadEstacao(estacoes*& estacao, int& numEstacoes, int& numCarrosTotal);
+
+void uploadArvores(carrosReparados*& raiz, const string ficheiro);
 
 void removeMarcasDuplicadas(marcas* marca);
 

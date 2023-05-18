@@ -27,11 +27,9 @@ int main() {
 
     estacoes* estacao = nullptr;
 
-    arvoreReparados* arvores = nullptr;
-
     carrosReparados* raiz = nullptr;
 
-    menu(numeroPalavrasMarcas, numeroPalavrasModelos, marca, modelo, carros, estacao, arvores, raiz);
+    menu(numeroPalavrasMarcas, numeroPalavrasModelos, marca, modelo, carros, estacao, raiz);
 
     limpaMarcas();
 

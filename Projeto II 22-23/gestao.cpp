@@ -376,6 +376,36 @@ void gravarFilaDeEspera(carro*& carros) {
 	}
 }
 
+// método para gravar as arvores
+void gravarArvores(carrosReparados* raiz, ofstream& arvore) {
+
+	if (raiz == nullptr) {
+		return;
+	}
+
+	gravarArvores(raiz->direita, arvore);
+
+	arvore << "-\n";
+	arvore << raiz->idET << "\n";
+	arvore << raiz->carros->idCarro << "\n";
+	arvore << raiz->carros->tempoMax << "\n";
+	arvore << raiz->carros->dias << "\n";
+	arvore << raiz->carros->prioritario << "\n";
+	arvore << raiz->carros->marca << "\n";
+	arvore << raiz->carros->modelo << "\n"; // adiciona a cada linha as informações do carro e a et que pertence
+
+	gravarArvores(raiz->esquerda, arvore);
+}
+
+// método para dar o nome ao ficheiro e invocar o método para gravar a arvore
+void nomeFicheiro(carrosReparados* raiz) {
+	ofstream arvore("arvores.txt");
+
+	arvore.clear();
+
+	gravarArvores(raiz, arvore);
+}
+
 // método para carregar a fila de espera
 void uploadFilaDeEspera(carro*& carros, int& numCarrosTotal) {
 
@@ -512,6 +542,43 @@ void uploadEstacao(estacoes*& estacao, int& numEstacoes, int& numCarrosTotal) {
 
 }
 
+// método para inserir os carros na arvore
+void uploadArvores(carrosReparados*& raiz, const string ficheiro) {
+
+	ifstream arvores(ficheiro);
+
+	if (arvores.is_open()) {
+
+		string linha;
+		int idET = 0;
+
+		while (getline(arvores, linha)) {
+			getline(arvores, linha);
+			idET = stoi(linha);
+			carro* novoCarro = new carro(); // cria um carro novo
+			getline(arvores, linha);
+			novoCarro->idCarro = stoi(linha);
+			getline(arvores, linha);
+			novoCarro->tempoMax = stoi(linha);
+			getline(arvores, linha);
+			novoCarro->dias = stoi(linha);
+			getline(arvores, linha);
+			novoCarro->prioritario = stoi(linha);
+			getline(arvores, linha);
+			novoCarro->marca = linha;
+			getline(arvores, linha);
+			novoCarro->modelo = linha; // dá os valores ao carro
+
+			inserirNaArvore(raiz, idET, novoCarro); // insere na arvore
+		}
+	}
+	else {
+		cout << "\nFalha ao abrir o ficheiro\n";
+	}
+
+	arvores.close(); // fecha o ficheiro
+}
+
 // método para remover marcas duplicadas do ficheiro de marcas
 void removeMarcasDuplicadas(marcas* marca) {
 
@@ -547,7 +614,7 @@ void removeMarcasDuplicadas(marcas* marca) {
 	}
 }
 
-//
+// método que faz o print da arvore da estação
 void imprimeArvore(carrosReparados* raiz, int nivel, int idET) {
 
 	if (raiz == nullptr) {
@@ -557,12 +624,13 @@ void imprimeArvore(carrosReparados* raiz, int nivel, int idET) {
 
 	imprimeArvore(raiz->direita, nivel + 1, idET);
 
+	// parte onde verifica se é a ET selecionada pelo user
 	if (raiz->idET == idET) {
 		for (int i = 0; i < nivel; i++) {
 			cout << "\t";
 		}
 
-		cout << "ET: " << raiz->idET << " ID: " << raiz->carros->idCarro << " | Modelo: " << raiz->carros->modelo << "\n";
+		cout <<"ID: " << raiz->carros->idCarro << " | Modelo: " << raiz->carros->modelo << "\n";
 	}
 
 	imprimeArvore(raiz->esquerda, nivel + 1, idET);
@@ -581,6 +649,7 @@ void imprimirArvorePorEstacao(carrosReparados* raiz) {
 
 
 void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int& numeroPalavrasMarcas, int numCarros, carro*& carros, int& numCarrosTotal, carrosReparados*& raiz) {
+
 
 	int options;
 
@@ -640,6 +709,7 @@ void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int& numeroPala
 
 		gravarEstacao(estacao, numEstacoes);
 		gravarFilaDeEspera(carros);
+		nomeFicheiro(raiz);
 		cout << "\nOficina gravada com sucesso\n";
 
 		break;
@@ -648,6 +718,7 @@ void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int& numeroPala
 
 		uploadEstacao(estacao, numEstacoes, numCarrosTotal);
 		uploadFilaDeEspera(carros, numCarrosTotal);
+		uploadArvores(raiz, "arvores.txt");
 		printETs(estacao);
 		printCars(carros);
 		removeMarcasDuplicadas(marca);
