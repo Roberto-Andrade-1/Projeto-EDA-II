@@ -20,8 +20,8 @@ int main() {
 
     modelos* modelo = nullptr;
 
-    lerMarcas("marcas.txt", marca);
-    lerModelos("modelos.txt", modelo);
+    lerMarcas(marca);
+    lerModelos(modelo);
 
     carro* carros = nullptr;
 
@@ -29,7 +29,9 @@ int main() {
 
     arvoreReparados* arvores = nullptr;
 
-    menu(numeroPalavrasMarcas, numeroPalavrasModelos, marca, modelo, carros, estacao, arvores);
+    carrosReparados* raiz = nullptr;
+
+    menu(numeroPalavrasMarcas, numeroPalavrasModelos, marca, modelo, carros, estacao, arvores, raiz);
 
     limpaMarcas();
 

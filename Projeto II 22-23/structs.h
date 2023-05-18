@@ -4,12 +4,14 @@
 
 using namespace std;
 
-struct modelos {
+struct modelos 
+{
     string modelo;
     modelos* proximoModelo;
 };
 
-struct marcas {
+struct marcas 
+{
     string marca;
     marcas* proximaMarca;
 };
@@ -25,14 +27,6 @@ struct carro
     carro* proximoCarro;
 };
 
-struct carroReparado 
-{
-    int idCarro;
-    string marca;
-    string modelo;
-    carroReparado* proximoCarro;
-};
-
 struct estacoes
 {
     int idET;
@@ -45,13 +39,10 @@ struct estacoes
     carro* primeiroCarro;
 };
 
-struct arvoreReparados
+struct carrosReparados 
 {
-    int idDaET;
-    int idCarro;
-    string marca;
-    string modelo;
-    arvoreReparados* esquerda;
-    arvoreReparados* direita;
-    arvoreReparados* proximaArvore;
+    int idET;
+    carro* carros;
+    carrosReparados* esquerda;
+    carrosReparados* direita;
 };

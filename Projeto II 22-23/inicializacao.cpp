@@ -12,82 +12,83 @@
 
 using namespace std;
 
-//método para ler os ficheiros
-void lerMarcas(const string& nomeFicheiro, marcas*& marca) {
-    ifstream ficheiro(nomeFicheiro);
-    string marcaCarro;
+//método para ler o ficheiro e adicionar a marca à lista ligada das marcas
+void lerMarcas(marcas*& marca) {
+    ifstream ficheiro("marcas.txt"); // recebe o ficheiro para leitura
+    string marcaCarro; // váriavel para guardar a marca
 
-    if (ficheiro.is_open()) {
-        while (getline(ficheiro, marcaCarro)) {
-            marcas* novaMarca = new marcas();
-            novaMarca->marca = marcaCarro;
-            novaMarca->proximaMarca = nullptr;
+    if (ficheiro.is_open()) { // se tiver aberto
+        while (getline(ficheiro, marcaCarro)) { // enquanto houver linhas para ler, atribui à string marcaCarro o valor 
+            marcas* novaMarca = new marcas(); // cria uma lista ligada de marcas
+            novaMarca->marca = marcaCarro; // dá o valor marcaCarro ao atributo marca da struct marcas
+            novaMarca->proximaMarca = nullptr; // e a proxima marca é null
 
-            if (marca == nullptr) {
-                marca = novaMarca;
+            if (marca == nullptr) { // se a lista ligada estiver vazia
+                marca = novaMarca; // adiciona a nova marca ao inicio da lista
             }
-            else {
-                marcas* ultima = marca;
-                while (ultima->proximaMarca != nullptr) {
-                    ultima = ultima->proximaMarca;
+            else { // caso contrário
+                marcas* ultima = marca; // cria uma nova variável do tipo marca para ser o seguinte na lista
+                while (ultima->proximaMarca != nullptr) { // enquanto houver marcas
+                    ultima = ultima->proximaMarca; // vai passando 
                 }
-                ultima->proximaMarca = novaMarca;
+                ultima->proximaMarca = novaMarca; // para adicionar essa nova marca ao final da lista
             }
         }
-        ficheiro.close();
+        ficheiro.close(); // e fecha o ficheiro
     }
 }
 
+// método para ler o ficheiro e adiconar o modelo à lista ligada de modelos
+void lerModelos(modelos*& modelo){
+    ifstream ficheiro("modelos.txt"); // recebe o ficheiro para leitura
+    string modeloCarro; // váriavel para guardar o modelo
 
-void lerModelos(const string& nomeFicheiro, modelos*& modelo){
-    ifstream ficheiro(nomeFicheiro);
-    string modeloCarro;
+    if (ficheiro.is_open()) { // se tiver aberto
+        while (getline(ficheiro, modeloCarro)) { // enquanto houver linhas para ler, atribui à string modeloCarro o valor 
+            modelos* novoModelo = new modelos(); // cria uma lista ligada de modelos 
+            novoModelo->modelo = modeloCarro; // dá o valor modeloCarro ao atributo modelo da struct modelos
+            novoModelo->proximoModelo = nullptr; // e o proximo modelo é null
 
-    if (ficheiro.is_open()) {
-        while (getline(ficheiro, modeloCarro)) {
-            modelos* novaMarca = new modelos();
-            novaMarca->modelo = modeloCarro;
-            novaMarca->proximoModelo = nullptr;
-
-            if (modelo == nullptr) {
-                modelo = novaMarca;
+            if (modelo == nullptr) { // se a lista ligada estiver vazia
+                modelo = novoModelo; // adiciona o novo modelo ao inicio da lista
             }
-            else {
-                modelos* ultima = modelo;
-                while (ultima->proximoModelo != nullptr) {
-                    ultima = ultima->proximoModelo;
+            else { // caso contrário
+                modelos* ultima = modelo; // cria uma nova variável do tipo modelo para ser o seguinte na lista
+                while (ultima->proximoModelo != nullptr) { // enquanto houver modelos
+                    ultima = ultima->proximoModelo; // vai passando 
                 }
-                ultima->proximoModelo = novaMarca;
+                ultima->proximoModelo = novoModelo; // para adicionar esse novo modelo ao final da lista
             }
         }
-        ficheiro.close();
+        ficheiro.close(); // e fecha o ficheiro
     }
 }
 
+// método para escolher um marca random
 string escolhePalavraRandomMarcas(marcas* marca) {
-    marcas* temp = marca;
-    int numeroPalavras = 0;
+    marcas* temp = marca; // recebe as marcas
+    int numeroPalavras = 0; // variável para armazenar o número de palavras
 
-    while (temp != nullptr) {
-        numeroPalavras++;
-        temp = temp->proximaMarca;
+    while (temp != nullptr) { // enquanto houver marcas
+        numeroPalavras++; // incrementa o número de palavras
+        temp = temp->proximaMarca; // passa para a próxima marca
     }
 
-    if (marca == nullptr) {
-        return "";
+    if (marca == nullptr) { // se for null
+        return ""; // retorna nada
     }
 
-    int numeroRandom = rand() % numeroPalavras;
+    int numeroRandom = rand() % numeroPalavras; // atribui à váriavel um valor aleatório entre 0 e o número de palavras
 
-    marcas* atual = marca;
-    int indexAtual = 0;
+    marcas* atual = marca; // recebe a marca atual
+    int indexAtual = 0; // váriavel para o index
 
-    while (atual != nullptr) {
-        if (indexAtual == numeroRandom) {
-            return atual->marca;
+    while (atual != nullptr) { // enquanto houver marcas
+        if (indexAtual == numeroRandom) { // se o index for igual ao número random
+            return atual->marca; // retorna a marca
         }
-        atual = atual->proximaMarca;
-        indexAtual++;
+        atual = atual->proximaMarca; // passa para a próxima marca
+        indexAtual++; // incrementa o index
     }
     return "";
 }
@@ -95,106 +96,77 @@ string escolhePalavraRandomMarcas(marcas* marca) {
 //metodo para escolher uma palavra random
 string escolhePalavraRandomModelos(modelos* modelo) {
 
-    modelos* temp = modelo;
-    int numeroPalavras = 0;
+    modelos* temp = modelo; // cria uma lista ligada temporaria dos modelos
+    int numeroPalavras = 0; // variável para armazenar o número de palavras
 
-    while (temp != nullptr) {
-        numeroPalavras++;
-        temp = temp->proximoModelo;
+    while (temp != nullptr) { // enquanto ouver modelos
+        numeroPalavras++; // acrescenta o número de palavras
+        temp = temp->proximoModelo; // passa para o próximo modelo
     }
 
-    if (modelo == nullptr) {
-        return "";
+    if (modelo == nullptr) { // se o modelo for null
+        return ""; 
     }
 
-    int numeroRandom = rand() % numeroPalavras;
+    int numeroRandom = rand() % numeroPalavras; // atribui à váriavel um valor aleatório entre 0 e o número de palavras
 
-    modelos* atual = modelo;
-    int indexAtual = 0;
+    modelos* atual = modelo; // recebe o modelo atual
+    int indexAtual = 0; // e o index atual
 
-    while (atual != nullptr) {
-        if (indexAtual == numeroRandom) {
-            return atual->modelo;
+    while (atual != nullptr) { // enquanto houver modelos
+        if (indexAtual == numeroRandom) { // se o index for igual ao número random
+            return atual->modelo; // dá return do modelo
         }
-        atual = atual->proximoModelo;
-        indexAtual++;
+        atual = atual->proximoModelo; // passa para o próximo modelo
+        indexAtual++; // incrementa o index
     }
     return "";
 }
 
 
-arvoreReparados* inserirCarroNaArvore(arvoreReparados*& arvores, int idDaET, carro*& carroAInserir) {
-    arvoreReparados* temp = arvores;
-
-    while (temp != nullptr) {
-        if (temp->idDaET == idDaET) {
-            arvoreReparados* novoCarro = new arvoreReparados();
-            novoCarro->idDaET = idDaET;
-            novoCarro->idCarro = carroAInserir->idCarro;
-            novoCarro->marca = carroAInserir->marca;
-            novoCarro->modelo = carroAInserir->modelo;
-            novoCarro->esquerda = nullptr;
-            novoCarro->direita = nullptr;
-            novoCarro->proximaArvore = temp->proximaArvore;
-
-            if (temp->esquerda == nullptr) {
-                temp->esquerda = novoCarro;
-            }
-            else if (carroAInserir->modelo < temp->modelo) {
-                temp->esquerda = inserirCarroNaArvore(temp->esquerda, idDaET, carroAInserir);
-            }
-            else {
-                temp->direita = inserirCarroNaArvore(temp->direita, idDaET, carroAInserir);
-            }
-
-            break; // Exit the loop after inserting the car
-        }
-
-        temp = temp->proximaArvore;
-    }
-
-    return arvores;
+carrosReparados* novoCarro(int idET, carro* carroReparado) {
+    carrosReparados* novoCarro = new carrosReparados;
+    novoCarro->idET = idET;
+    novoCarro->carros = carroReparado;
+    novoCarro->esquerda = NULL;
+    novoCarro->direita = NULL;
+    return novoCarro;
 }
 
+void inserirNaArvore(carrosReparados*& raiz, int idET, carro* carroReparado) {
 
-void criarArvores(arvoreReparados*& arvores, estacoes*& estacao) {
-
-    estacoes* temp = estacao;
-
-    while (temp != nullptr) {
-        arvoreReparados* novaArvore = new arvoreReparados();
-
-        novaArvore->idDaET = temp->idET;
-        novaArvore->marca = temp->marcaEspecializada;
-        novaArvore->direita = nullptr;
-        novaArvore->esquerda = nullptr;
-        novaArvore->proximaArvore = nullptr;
-
-        if (arvores == nullptr) {
-            arvores = novaArvore;
+    if (raiz == nullptr) {
+        raiz = novoCarro(idET, carroReparado);
+        return;
+    }
+    if (carroReparado->marca < raiz->carros->marca) {
+        inserirNaArvore(raiz->esquerda, idET, carroReparado);
+    }
+    else if (carroReparado->marca > raiz->carros->marca) {
+        inserirNaArvore(raiz->direita, idET, carroReparado);
+    }
+    else {
+        if (carroReparado->modelo < raiz->carros->modelo) {
+            inserirNaArvore(raiz->esquerda, idET, carroReparado);
         }
         else {
-            arvoreReparados* ultimaArvore = arvores;
-            while (ultimaArvore->proximaArvore != nullptr) {
-                ultimaArvore = ultimaArvore->proximaArvore;
-            }
-            ultimaArvore->proximaArvore = novaArvore;
+            inserirNaArvore(raiz->direita, idET, carroReparado);
         }
-
-        temp = temp->proximaEstacao;
     }
 }
 
+
+// método para organizar as estações
 void organizaETs(estacoes*& estacao) {
 
-    estacoes* atual = estacao->proximaEstacao;
-    estacao->proximaEstacao = nullptr;
+    estacoes* atual = estacao->proximaEstacao; // recebe as estações 
+    estacao->proximaEstacao = nullptr; // proxima estação é null
 
-    while (atual != nullptr) {
+    while (atual != nullptr) { // enquanto tiver estações
 
-        estacoes* proxima = atual->proximaEstacao;
+        estacoes* proxima = atual->proximaEstacao; // recebe a proxima da estação atual
 
-        if (atual->idET < estacao->idET) {
+        if (atual->idET < estacao->idET) { // se o id da atual for menor que a primeira 
             atual->proximaEstacao = estacao;
             estacao = atual;
         }
@@ -227,8 +199,8 @@ void organizaListaEspera(carro*& carros) {
         else { // caso não seja cumprida a condição
             carro* anterior = carros; // cria uma nova lista ligada
 
-            while (anterior->proximoCarro != nullptr && (atual->prioritario < anterior->proximoCarro->prioritario || (atual->prioritario == anterior->proximoCarro->prioritario && atual->idCarro > anterior->proximoCarro->idCarro))) {
-                anterior = anterior->proximoCarro;
+            while (anterior->proximoCarro != nullptr && (atual->prioritario < anterior->proximoCarro->prioritario || (atual->prioritario == anterior->proximoCarro->prioritario && atual->idCarro > anterior->proximoCarro->idCarro))) { // verifica as condições necessárias se for prioritário ou por id e prioridade
+                anterior = anterior->proximoCarro; 
             }
             atual->proximoCarro = anterior->proximoCarro;
             anterior->proximoCarro = atual;
@@ -239,9 +211,9 @@ void organizaListaEspera(carro*& carros) {
 
 
 // método que remove o carro da estação
-void removeCarros(estacoes*& estacao, arvoreReparados*& arvores) {
+void removeCarros(estacoes*& estacao, carrosReparados*& raiz) {
 
-    estacoes* temp = estacao;
+    estacoes* temp = estacao; // cópia das estações
 
     while (temp != nullptr) { // percorre todas as estações da lista ligada
         carro* atual = temp->primeiroCarro; // recebe a lista ligada de carros da estacao
@@ -255,7 +227,9 @@ void removeCarros(estacoes*& estacao, arvoreReparados*& arvores) {
                 cout << "O carro com ID " << atual->idCarro << " foi removido da estação " << temp->idET << ".\n";
                 temp->faturacao += (atual->dias * 50); //adiciona ao valor da faturação da estação
 
-                inserirCarroNaArvore(arvores, temp->idET, atual);
+                carro* copia = new carro(*atual);
+
+                inserirNaArvore(raiz, temp->idET, copia);
 
                 if (anterior == nullptr) { // se não tiver carro antes do que vai ser removido
                     temp->primeiroCarro = atual->proximoCarro; // o primeiro carro da ET passa a ser o seguinte do atual
@@ -264,7 +238,7 @@ void removeCarros(estacoes*& estacao, arvoreReparados*& arvores) {
                     anterior->proximoCarro = atual->proximoCarro; // caso contrario o seguinte do carro anterior é o proximo ao carro que está a ser removido
                 }
                 delete atual; // remove o atual
-                atual = anterior == nullptr ? temp->primeiroCarro : anterior->proximoCarro; // 
+                atual = anterior == nullptr ? temp->primeiroCarro : anterior->proximoCarro; // se o anterior for um null o atual é o primeiro da estação caso contrário é o proximo do anterior
                 temp->quantidadeCarros--; // diminui a quantidade de carros atual na ET
             }
             else { // caso as condições não sejam cumpridas
@@ -302,7 +276,7 @@ void criarCarro(carro*& carros, int& numCarrosTotal, int& numeroPalavrasMarcas, 
                 novoCarro->proximoCarro = nullptr; // próximo carro a null
 
                 novoCarro->proximoCarro = carros;
-                carros = novoCarro;
+                carros = novoCarro; // adiciona à fila de espera (lista ligada)
 
                 numCarrosCriados++; // atualiza a variavel de carros criados
                 numCarrosTotal++; //atualiza a variavel numCarrosTotal
@@ -315,12 +289,12 @@ void criarCarro(carro*& carros, int& numCarrosTotal, int& numeroPalavrasMarcas, 
 // método para remover os carros da lista de espera que vão ser adicionados na ET
 carro* removeDaListaEspera(carro* carroNaET, carro* carros) {
     if (carroNaET == carros) { // se o carro for o mesmo
-        carros = carros->proximoCarro; // é passado para o proximo carro
+        carros = carros->proximoCarro; // esse carro passa a ser o proximo carro
     }
     else { // caso contrário
         carro* carroAtual = carros; // cria a lista ligada com o resto dos carros que não vão ser adicionados
         while (carroAtual->proximoCarro != carroNaET) { // vê se são diferentes
-            carroAtual = carroAtual->proximoCarro; 
+            carroAtual = carroAtual->proximoCarro; // percorre todos os carros diferentes
         }
         carroAtual->proximoCarro = carroNaET->proximoCarro; // próximo carro do carro que não vai ser removido é o próximo do que vai ser removido
     }
@@ -332,14 +306,14 @@ carro* removeDaListaEspera(carro* carroNaET, carro* carros) {
 void adicionaCarroET(carro*& carros, estacoes*& estacao) {
 
     int carroAdicionado = 0; //variavel para contar quantos carros foram adicionados
-    carro* carroAAdicionar = carros; //recebe a carro de carros
+    carro* carroAAdicionar = carros; //copia da lista ligada de carros
 
     while (carroAdicionado < 8 && carroAAdicionar != nullptr) { //enquanto o numero de carros adiconados não for 8 nem percorrer a lista ligada de carros toda
 
-        estacoes* estacaoAtual = estacao; // lista ligada temporaria para receber as estações
+        estacoes* estacaoAtual = estacao; // lista ligada temporaria para receber as estações existentes
 
         while (estacaoAtual != nullptr){ // enquanto houver estações
-            if((carroAAdicionar->marca == estacaoAtual->marcaEspecializada) && (estacaoAtual->quantidadeCarros < estacaoAtual->capacidade)){ // se tiver a mesma marca e capacidade
+            if((carroAAdicionar->marca == estacaoAtual->marcaEspecializada) && (estacaoAtual->quantidadeCarros < estacaoAtual->capacidade)){ // se tiver a mesma marca e tiver capacidade
                 
                 carro* carroET = new carro(); // cria um novo carro
                 *carroET = *carroAAdicionar; // igualá ao carro que vai ser adicionado
@@ -351,15 +325,15 @@ void adicionaCarroET(carro*& carros, estacoes*& estacao) {
                 else { // caso contrário
                     carro* ultimoCarro = estacaoAtual->primeiroCarro; //lista ligada que recebe os carros da estação
                     while (ultimoCarro->proximoCarro != nullptr) { // enquanto o próximo carro for diferente de null
-                        ultimoCarro = ultimoCarro->proximoCarro; 
+                        ultimoCarro = ultimoCarro->proximoCarro; // percorre até ao final da lista ligada
                     }
-                    ultimoCarro->proximoCarro = carroET;
+                    ultimoCarro->proximoCarro = carroET; // adicona no final da lista o novo carro
                 }
-                estacaoAtual->quantidadeCarros++;
-                carroAdicionado++;
-                carros = removeDaListaEspera(carroAAdicionar, carros);
+                estacaoAtual->quantidadeCarros++; // aumenta a quantidade de carros na estação
+                carroAdicionado++; // incrementa a variável de carros que já foram adicionados
+                carros = removeDaListaEspera(carroAAdicionar, carros); // retira da lista ligada de carros (fila de espera) esse carro que foi adicionado à estação
                 carroAAdicionar = carros;
-                break;
+                break; 
             }
             estacaoAtual = estacaoAtual->proximaEstacao; //próxima estação
         }
@@ -373,10 +347,10 @@ void adicionaCarroET(carro*& carros, estacoes*& estacao) {
 void primeirosCarros(carro*& carros, marcas*& marca, modelos*& modelo, int& numeroPalavrasMarcas, int& numeroPalavrasModelos, int& numCarrosTotal) {
     for (int i = 0; i < 10; i++) // faz um loop de 10 iterações
     {
-        string marcaRandom = escolhePalavraRandomMarcas(marca); // seleciona uma marca random do ficheiro
-        string modeloRandom = escolhePalavraRandomModelos(modelo);// seleciona um modelo random do ficheiro
+        string marcaRandom = escolhePalavraRandomMarcas(marca); // seleciona uma marca random da lista ligada de marcas
+        string modeloRandom = escolhePalavraRandomModelos(modelo);// seleciona um modelo random da lista ligada de modelos
 
-        carro* novoCarro = new carro();
+        carro* novoCarro = new carro(); // cria um novo carro
 
         novoCarro->idCarro = numCarrosTotal + 1;
         novoCarro->tempoMax = rand() % 4 + 2;
@@ -384,119 +358,120 @@ void primeirosCarros(carro*& carros, marcas*& marca, modelos*& modelo, int& nume
         novoCarro->prioritario = rand() % 100 < 5;
         novoCarro->marca = marcaRandom;
         novoCarro->modelo = modeloRandom;
-        novoCarro->proximoCarro = nullptr;
+        novoCarro->proximoCarro = nullptr; // adiciona os valores necessários aos atributos do carro
         
         novoCarro->proximoCarro = carros;
-        carros = novoCarro;
+        carros = novoCarro; // adiciona o carro criado à lista ligada da fila de espera
 
         numCarrosTotal++; // atualiza a variavel numCarrosTotal
     }
 }
 
-
+// método que cria as estações de trabalho
 void estacaoTrabalho(estacoes*& estacao, int& numET, int& numEstacoes, int& numeroPalavrasMarcas, marcas*& marca) {
 
     string nome; // variavel para guardar o nome do mecanico
     getline(cin, nome); // recebe o input do usuario
 
-    for (int i = 0; i < numET; i++) {
+    for (int i = 0; i < numET; i++) { // ciclo que cria a quantidade de estações baseado na variável que tem o valor random
 
-        string marcaRandom = escolhePalavraRandomMarcas(marca);
+        string marcaRandom = escolhePalavraRandomMarcas(marca); // retira uma marca random da lista de marcas
 
         cout << "Dê um nome ao mecânico " << i + 1 << ": \n"; // põe na consola a mensagem para dar um nome
         getline(cin, nome); // recebe o input do usuario
 
-        estacoes* novaET = new estacoes();
+        estacoes* novaET = new estacoes(); // cria uma nova estação
 
-        novaET->idET = numEstacoes + 1;
+        novaET->idET = numEstacoes + 1; 
         novaET->capacidade = rand() % 4 + 2;
         novaET->quantidadeCarros = 0;
         novaET->faturacao = 0;
         novaET->mecanico = nome;
         novaET->marcaEspecializada = marcaRandom;
         novaET->proximaEstacao = nullptr;
-        novaET->primeiroCarro = nullptr;
+        novaET->primeiroCarro = nullptr; // adiciona aos atributos da estação os valores necessários
 
         novaET->proximaEstacao = estacao;
-        estacao = novaET;
+        estacao = novaET; // adiciona a estacao à lista ligada
 
-        numEstacoes++;
+        numEstacoes++; // incrementa o numero de estações
     }
 }
 
-
+// método para fazer output dos carros na fila de espera
 void printCars(carro* carros) {
 
     cout << "\nLista de espera: \n";
-    for (int i = 1; carros != nullptr; i++) {
+    while (carros != nullptr) { // percorre os carros 
         cout << "Carro ID: " << carros->idCarro << " | "
              << "Marca: " << carros->marca << " | "
              << "Modelo: " << carros->modelo << " | "
              << "Prioritário: " << (carros->prioritario ? "Sim" : "Não") << " | "
              << "Tempo de reparação: " << carros->tempoMax << " | "
-             << "Dias na oficina: " << carros->dias << "\n";
+             << "Dias na oficina: " << carros->dias << "\n"; // faz o output das informações necessárias de cada carro
         cout << "\n";
-        carros = carros->proximoCarro;
+        carros = carros->proximoCarro; // passa para o próximo carro
     }
 }
 
+// método para fazer output das estações
 void printETs(estacoes* estacao) {
 
-    while (estacao != nullptr) {
+    while (estacao != nullptr) { // percorre todas as estações
         cout << "\nEstação ";
         cout << "ID: " << estacao->idET << " | "
             << "Mecânico: " << estacao->mecanico << " | "
             << "Capacidade: " << estacao->capacidade << " | "
             << "Carros: " << estacao->quantidadeCarros << " | "
             << "Marca: " << estacao->marcaEspecializada << " | "
-            << "Total Faturação: " << estacao->faturacao << "$\n\n";
+            << "Total Faturação: " << estacao->faturacao << "$\n\n"; // faz os outputs necessários, e busca a informação desejada
 
-        for (carro* carroAtual = estacao->primeiroCarro; carroAtual != nullptr; carroAtual = carroAtual->proximoCarro) {
+        for (carro* carroAtual = estacao->primeiroCarro; carroAtual != nullptr; carroAtual = carroAtual->proximoCarro) { // output dos carros na estação
 
             cout << "Carro ID: " << carroAtual->idCarro << " | "
                 << "Marca: " << carroAtual->marca << " | "
                 << "Modelo: " << carroAtual->modelo << " | "
                 << "Prioritário: " << (carroAtual->prioritario ? "Sim" : "Não") << " | "
                 << "Tempo de reparação: " << carroAtual->tempoMax << " | "
-                << "Dias na oficina: " << carroAtual->dias << "\n";
+                << "Dias na oficina: " << carroAtual->dias << "\n"; // faz os output das informações dos carros
         }
         cout << "-------------------------- \n";
 
-        estacao = estacao->proximaEstacao;
+        estacao = estacao->proximaEstacao; // passa para a estação seguinte
     }
 }
 
+// método para retirar as marcas que foram adicionadas ao ficheiro das marcas
 void limpaMarcas() {
 
-    ifstream marcas("marcas.txt");
+    ifstream marcas("marcas.txt"); // recebe o ficheiro marcas para leitura
 
     if (marcas.is_open()) {
-        ofstream marcasTemp("temp.txt");
+        ofstream marcasTemp("temp.txt"); // cria um ficheiro temporario de escrita
 
         if (marcasTemp.is_open()) {
-            string linha;
-            int numeroLinha = 1;
-            int comecaLinha = 46;
+            string linha; // variável para ler as linhas
+            int numeroLinha = 1; // onde vai começar a ler
+            int comecaLinha = 46; // até onde lê sem eliminar
 
-            while (getline(marcas, linha)) {
-                if (numeroLinha <= comecaLinha) {
+            while (getline(marcas, linha)) { // vai lendo cada linha do ficheiro marcas
+                if (numeroLinha <= comecaLinha) { // se tiver entre as 46 primeiras linhas adiciona ao ficheiro temporario
                     marcasTemp << linha << "\n";
                 }
-                numeroLinha++;
+                numeroLinha++; // incrementa o número das linhas
             }
 
-            marcas.close();
-            marcasTemp.close();
+            marcas.close(); // fecha os ficheiros
+            marcasTemp.close(); 
 
-            remove("marcas.txt");
-            rename("temp.txt", "marcas.txt");
+            remove("marcas.txt"); // remove o ficheiro marcas 
+            rename("temp.txt", "marcas.txt"); // substitui o nome do ficheiro temporario para marcas.txt
         }
     }
 }
 
-
 // método que faz o output inicial a pedir os ficheiros, e pede os inputs para fazer os ciclos ou a gestao
-void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca, modelos*& modelo, carro*& carros, estacoes*& estacao, arvoreReparados*& arvores) {
+void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca, modelos*& modelo, carro*& carros, estacoes*& estacao, carrosReparados*& raiz) {
 
     char escolha;
     int numCarros = 0;
@@ -520,6 +495,8 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca,
             //upload das arvores, senão não dá para imprimir
             printETs(estacao);
             printCars(carros);
+            removeMarcasDuplicadas(marca);
+
             ficheiros = false;
 
             break;
@@ -531,8 +508,6 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca,
             primeirosCarros(carros, marca, modelo, numeroPalavrasMarcas, numeroPalavrasModelos, numCarrosTotal);
 
             estacaoTrabalho(estacao, numET, numEstacoes, numeroPalavrasMarcas, marca);
-
-            criarArvores(arvores, estacao);
 
             organizaETs(estacao);
 
@@ -567,7 +542,7 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca,
 
             criarCarro(carros, numCarrosTotal, numeroPalavrasMarcas, numeroPalavrasModelos, estacao, marca, modelo);
 
-            removeCarros(estacao, arvores);
+            removeCarros(estacao, raiz, arvores);
 
             organizaETs(estacao);
 
@@ -581,7 +556,7 @@ void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca,
 
         case 'g':
 
-            gestao(estacao, numEstacoes, marca, numeroPalavrasMarcas, numCarros, carros, numCarrosTotal, arvores);
+            gestao(estacao, numEstacoes, marca, numeroPalavrasMarcas, numCarros, carros, numCarrosTotal, arvores, raiz);
 
             break;
 

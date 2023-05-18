@@ -1,28 +1,25 @@
 #pragma once
-#include <string>
 #include <stdlib.h>
 #include "structs.h"
 #include "gestao.h"
 
-using namespace std;
+void lerMarcas(marcas*& marca);
 
-void lerMarcas(const string& nomeFicheiro, marcas*& marca);
-
-void lerModelos(const string& nomeFicheiro, modelos*& modelo);
+void lerModelos(modelos*& modelo);
 
 string escolhePalavraRandomMarcas(marcas* marca);
 
 string escolhePalavraRandomModelos(modelos* modelo);
 
-arvoreReparados* inserirCarroNaArvore(arvoreReparados*& arvores, int idDaET, carro*& carroAInserir);
+carrosReparados* novoCarro(int idET, carro* carroReparado);
 
-void criarArvores(arvoreReparados*& arvores, estacoes*& estacao);
+void inserirNaArvore(carrosReparados*& raiz, int idET, carro* carroReparado);
 
 void organizaETs(estacoes*& estacao);
 
 void organizaListaEspera(carro*& carros);
 
-void removeCarros(estacoes*& estacao, arvoreReparados*& arvores);
+void removeCarros(estacoes*& estacao, carrosReparados*& raiz);
 
 void criarCarro(carro*& carros, int& numCarrosTotal, int& numeroPalavrasMarcas, int& numeroPalavrasModelos, estacoes*& estacao, marcas*& marca, modelos*& modelo);
 
@@ -40,4 +37,4 @@ void printETs(estacoes* estacao);
 
 void limpaMarcas();
 
-void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca, modelos*& modelo, carro*& carros, estacoes*& estacao, arvoreReparados*& arvores);
+void menu(int& numeroPalavrasMarcas, int& numeroPalavrasModelos, marcas*& marca, modelos*& modelo, carro*& carros, estacoes*& estacao, carrosReparados*& raiz);

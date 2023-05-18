@@ -3,7 +3,7 @@
 #include "structs.h"
 #include "gestao.h"
 
-void reparacaoManual(estacoes*& estacao, arvoreReparados*& arvores);
+void reparacaoManual(estacoes*& estacao, carrosReparados*& raiz);
 
 void tempoReparacao(carro*& carros, int& numEstacoes, estacoes*& estacao);
 
@@ -23,8 +23,10 @@ void uploadFilaDeEspera(carro*& carros, int& numCarrosTotal);
 
 void uploadEstacao(estacoes*& estacao, int& numEstacoes, int& numCarrosTotal);
 
-void imprimeArvore(arvoreReparados* arvores, int nivel);
+void removeMarcasDuplicadas(marcas* marca);
 
-void imprimirArvorePorEstacao(arvoreReparados* arvores);
+void imprimeArvore(carrosReparados* raiz, int nivel, int idET);
 
-void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int& numeroPalavrasMarcas, int numCarros, carro*& carros, int& numCarrosTotal, arvoreReparados*& arvores);
+void imprimirArvorePorEstacao(carrosReparados* raiz);
+
+void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int& numeroPalavrasMarcas, int numCarros, carro*& carros, int& numCarrosTotal, carrosReparados*& raiz);
