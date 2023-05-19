@@ -1,2 +1,4 @@
-﻿  gestao.cpp
+﻿  inicializacao.cpp
+C:\Users\rober\OneDrive\Documentos\EDA\Projeto II 22-23\Projeto II 22-23\inicializacao.cpp(113): warning C4715: 'escolhePalavraRandomModelos': nem todos os caminhos de controle retornam um valor
+C:\Users\rober\OneDrive\Documentos\EDA\Projeto II 22-23\Projeto II 22-23\inicializacao.cpp(88): warning C4715: 'escolhePalavraRandomMarcas': nem todos os caminhos de controle retornam um valor
   Projeto II 22-23.vcxproj -> C:\Users\rober\OneDrive\Documentos\EDA\Projeto II 22-23\x64\Debug\Projeto II 22-23.exe

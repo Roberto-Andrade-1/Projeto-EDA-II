@@ -73,10 +73,6 @@ string escolhePalavraRandomMarcas(marcas* marca) {
         temp = temp->proximaMarca; // passa para a próxima marca
     }
 
-    if (marca == nullptr) { // se for null
-        return ""; // retorna nada
-    }
-
     int numeroRandom = rand() % numeroPalavras; // atribui à váriavel um valor aleatório entre 0 e o número de palavras
 
     marcas* atual = marca; // recebe a marca atual
@@ -89,7 +85,6 @@ string escolhePalavraRandomMarcas(marcas* marca) {
         atual = atual->proximaMarca; // passa para a próxima marca
         indexAtual++; // incrementa o index
     }
-    return "";
 }
 
 //metodo para escolher uma palavra random
@@ -101,10 +96,6 @@ string escolhePalavraRandomModelos(modelos* modelo) {
     while (temp != nullptr) { // enquanto ouver modelos
         numeroPalavras++; // acrescenta o número de palavras
         temp = temp->proximoModelo; // passa para o próximo modelo
-    }
-
-    if (modelo == nullptr) { // se o modelo for null
-        return ""; 
     }
 
     int numeroRandom = rand() % numeroPalavras; // atribui à váriavel um valor aleatório entre 0 e o número de palavras
@@ -119,7 +110,6 @@ string escolhePalavraRandomModelos(modelos* modelo) {
         atual = atual->proximoModelo; // passa para o próximo modelo
         indexAtual++; // incrementa o index
     }
-    return "";
 }
 
 // método para criar um carro para a arvore
@@ -207,7 +197,6 @@ void organizaListaEspera(carro*& carros) {
         atual = proximo; // vai para o próximo carro na lista ligada
     }
 }
-
 
 // método que remove o carro da estação
 void removeCarros(estacoes*& estacao, carrosReparados*& raiz) {
