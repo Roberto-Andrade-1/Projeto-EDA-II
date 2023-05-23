@@ -1,15 +1,14 @@
-#include <iostream>
+Ôªø#include <iostream>
 #include <string>
 #include <stdlib.h>
 #include <time.h>
 #include <fstream>
 #include <sstream>
-#include <algorithm>
 #include "structs.h"
 #include "inicializacao.h"
 #include "gestao.h"
 
-// mÈtodo que possibilita a reparaÁ„o manual de um carro numa ET
+// m√©todo que possibilita a repara√ß√£o manual de um carro numa ET
 void reparacaoManual(estacoes*& estacao, carrosReparados*& raiz) {
 
 	string marcaCarro; // variavel para receber a marca do carro
@@ -18,36 +17,36 @@ void reparacaoManual(estacoes*& estacao, carrosReparados*& raiz) {
 	getline(cin, marcaCarro);
 	cout << "\nIntroduza a marca do carro a remover: "; // pergunta ao usuario a marca
 	getline(cin, marcaCarro);
-	cout << "\nIntroduza tambÈm o modelo do carro: "; // pergunta ao usuario o modelo
+	cout << "\nIntroduza tamb√©m o modelo do carro: "; // pergunta ao usuario o modelo
 	getline(cin, modeloCarro);
 
-	estacoes* atual = estacao; // recebe a estaÁ„o atual
-	while (atual != nullptr) { // enquanto a estaÁ„o for diferente de nul
+	estacoes* atual = estacao; // recebe a esta√ß√£o atual
+	while (atual != nullptr) { // enquanto a esta√ß√£o for diferente de nul
 		carro* carroNaET = atual->primeiroCarro; // recebe o primeiro carro da ET
 		carro* anterior = nullptr; // e o anterior a null
 
-		while (carroNaET != nullptr) { // enquanto o carro na estaÁ„o for diferente de null
-			if (marcaCarro == carroNaET->marca && modeloCarro == carroNaET->modelo) { // compara a marca e o modelo dada pelo usuario a ver se existe na estaÁ„o
+		while (carroNaET != nullptr) { // enquanto o carro na esta√ß√£o for diferente de null
+			if (marcaCarro == carroNaET->marca && modeloCarro == carroNaET->modelo) { // compara a marca e o modelo dada pelo usuario a ver se existe na esta√ß√£o
 
-				cout << "\nO carro com ID " << carroNaET->idCarro << " foi removido da estaÁ„o " << atual->idET << ".\n"; // se houver esse carro faz o display desta mensagem
-				atual->faturacao += (carroNaET->dias * 50); // adiciona ‡ faturaÁ„o da estaÁ„o
+				cout << "\nO carro com ID " << carroNaET->idCarro << " foi removido da esta√ß√£o " << atual->idET << ".\n"; // se houver esse carro faz o display desta mensagem
+				atual->faturacao += (carroNaET->dias * 50); // adiciona √† fatura√ß√£o da esta√ß√£o
 
 				carro* copia = new carro(*carroNaET);
 
-				inserirNaArvore(raiz, atual->idET, copia); // insere o carro na arvore da estaÁ„o
+				inserirNaArvore(raiz, atual->idET, copia); // insere o carro na arvore da esta√ß√£o
 
-				if (anterior == nullptr) { // se n„o tiver carro antes do que vai ser removido
+				if (anterior == nullptr) { // se n√£o tiver carro antes do que vai ser removido
 					atual->primeiroCarro = carroNaET->proximoCarro; // o primeiro carro da ET passa a ser o seguinte do atual
 				}
 				else {
-					anterior->proximoCarro = carroNaET->proximoCarro; // caso contrario o seguinte do carro anterior È o proximo ao carro que est· a ser removido
+					anterior->proximoCarro = carroNaET->proximoCarro; // caso contrario o seguinte do carro anterior √© o proximo ao carro que est√° a ser removido
 				}
 
 				delete carroNaET; // remove o atual
-				carroNaET = anterior == nullptr ? atual->primeiroCarro : anterior->proximoCarro; // se o anterior for um null o atual È o primeiro da estaÁ„o caso contr·rio È o proximo do anterior
+				carroNaET = anterior == nullptr ? atual->primeiroCarro : anterior->proximoCarro; // se o anterior for um null o atual √© o primeiro da esta√ß√£o caso contr√°rio √© o proximo do anterior
 				atual->quantidadeCarros--; // diminui a quantidade de carros atual na ET
 			}
-			else { // caso as condiÁıes n„o sejam cumpridas
+			else { // caso as condi√ß√µes n√£o sejam cumpridas
 				anterior = carroNaET;
 				carroNaET = carroNaET->proximoCarro;
 			}
@@ -56,11 +55,11 @@ void reparacaoManual(estacoes*& estacao, carrosReparados*& raiz) {
 	}
 }
 
-// mÈtodo para alterar o tempo de reparaÁ„o de um carro na fila
+// m√©todo para alterar o tempo de repara√ß√£o de um carro na fila
 void tempoReparacao(carro*& carros, int& numEstacoes, estacoes*& estacao) {
 
-	string marcaCarro; // vari·vel que recebe a marca do carro
-	string modeloCarro; // vari·vel que recebe o modelo do carro
+	string marcaCarro; // vari√°vel que recebe a marca do carro
+	string modeloCarro; // vari√°vel que recebe o modelo do carro
 	int tempoReparacao = 0; // e a que recebe o tempo 
 
 	getline(cin, marcaCarro);
@@ -70,18 +69,18 @@ void tempoReparacao(carro*& carros, int& numEstacoes, estacoes*& estacao) {
 	cout << "Introduza o modelo do carro: ";
 	getline(cin, modeloCarro);
 
-	cout << "\nIntroduza o tempo de reparaÁ„o atualizado: ";
+	cout << "\nIntroduza o tempo de repara√ß√£o atualizado: ";
 	cin >> tempoReparacao; // faz os outputs para o usuario
 
 	carro* atual = carros; // recebe o carro atual
 	carro* anterior = nullptr; // e o anterior a null
 
 	while (atual != nullptr) { // enquanto houver carros
-		if ((atual->marca == marcaCarro) && (atual->modelo == modeloCarro)) { // vÍ se a marca e modelo s„o os mesmos
+		if ((atual->marca == marcaCarro) && (atual->modelo == modeloCarro)) { // v√™ se a marca e modelo s√£o os mesmos
 
 			carro* novoCarro = new carro(); // cria um novo carro com tudo igual ao que vai ser mudado
 			novoCarro->idCarro = atual->idCarro; 
-			novoCarro->tempoMax = tempoReparacao; // altera apenas o tempo de reparaÁ„o para o inserido pelo usuario
+			novoCarro->tempoMax = tempoReparacao; // altera apenas o tempo de repara√ß√£o para o inserido pelo usuario
 			novoCarro->dias = atual->dias;
 			novoCarro->prioritario = atual->prioritario;
 			novoCarro->marca = atual->marca;
@@ -92,43 +91,43 @@ void tempoReparacao(carro*& carros, int& numEstacoes, estacoes*& estacao) {
 				carros = atual->proximoCarro; 
 			}
 			else {
-				anterior->proximoCarro = atual->proximoCarro; // o proximo carro ao anterior È igual ao proximo do atual
+				anterior->proximoCarro = atual->proximoCarro; // o proximo carro ao anterior √© igual ao proximo do atual
 			}
 			delete atual; // apaga o atual
 
-			if (carros == nullptr) { // se n„o houver carros 
-				carros = novoCarro; // adiciona o novo carro ‡ lista de carros
+			if (carros == nullptr) { // se n√£o houver carros 
+				carros = novoCarro; // adiciona o novo carro √† lista de carros
 			}
 			else {
 				carro* ultimoCarro = carros; // variavel para receber o ultimo carro
-				while (ultimoCarro->proximoCarro != nullptr) { // enquanto o proximo carro È diferente de null
-					ultimoCarro = ultimoCarro->proximoCarro; // percorre atÈ chegar ao ultimo carro
+				while (ultimoCarro->proximoCarro != nullptr) { // enquanto o proximo carro √© diferente de null
+					ultimoCarro = ultimoCarro->proximoCarro; // percorre at√© chegar ao ultimo carro
 				}
 				ultimoCarro->proximoCarro = novoCarro; // e o proximo carro depois do ultimo vai ser o novo criado
 			}
 			break;
 		}
 		anterior = atual; // atualiza o anterior
-		atual = atual->proximoCarro; // vai para o prÛximo carro
+		atual = atual->proximoCarro; // vai para o pr√≥ximo carro
 	}
 	organizaListaEspera(carros); // organiza os carros (lista de espera)
-	printETs(estacao); // d· print das ETS
-	printCars(carros); // d· print dos carros
+	printETs(estacao); // d√° print das ETS
+	printCars(carros); // d√° print dos carros
 }
 
-// mÈtodo para adicionar prioridadea um carro na fila
+// m√©todo para adicionar prioridadea um carro na fila
 void adicionarPrioridade(carro*& carros, int& numEstacoes, estacoes*& estacao) {
 
 	int IDcarro = 0; // variavel que recebe o ID do carro
 
 	cout << "\nIntroduza o ID do carro que quer alterar a prioridade: ";
-	cin >> IDcarro; // pede ao usu·rio o ID e atualiza a variavel
+	cin >> IDcarro; // pede ao usu√°rio o ID e atualiza a variavel
 	 
 	carro* atual = carros; // recebe o carro atual
 	carro* anterior = nullptr; // variavel de carro anterior a null
 
 	while (atual != nullptr) { // enquanto o atual for diferente de null
-		if (atual->idCarro == IDcarro) { // compara o id dado pelo usu·rio com o do carro atual
+		if (atual->idCarro == IDcarro) { // compara o id dado pelo usu√°rio com o do carro atual
 			if (atual->prioritario == false) { // se a prioridade desse carro for falsa
 
 				carro* novoCarro = new carro();
@@ -144,7 +143,7 @@ void adicionarPrioridade(carro*& carros, int& numEstacoes, estacoes*& estacao) {
 					carros = atual->proximoCarro;
 				}
 				else {
-					anterior->proximoCarro = atual->proximoCarro; // se n„o o proximo carro ao anterior È o proximo do atual
+					anterior->proximoCarro = atual->proximoCarro; // se n√£o o proximo carro ao anterior √© o proximo do atual
 				}
 				delete atual; // apaga o atual
 
@@ -160,8 +159,8 @@ void adicionarPrioridade(carro*& carros, int& numEstacoes, estacoes*& estacao) {
 				}
 				break;
 			}
-			else { // se j· for priorit·rio d· output desta mensagem
-				cout << "\nEste carro j· È priorit·rio\n";
+			else { // se j√° for priorit√°rio d√° output desta mensagem
+				cout << "\nEste carro j√° √© priorit√°rio\n";
 				break;
 			}
 		}
@@ -169,58 +168,36 @@ void adicionarPrioridade(carro*& carros, int& numEstacoes, estacoes*& estacao) {
 		atual = atual->proximoCarro;
 	}
 	organizaListaEspera(carros); // organiza a lista de carros
-	printETs(estacao); // print das estaÁıes
+	printETs(estacao); // print das esta√ß√µes
 	printCars(carros); // print dos carros
 }
 
-// mÈtodo que remove todos os carros de uma estaÁ„o
-void removerTodosCarros(estacoes*& estacao, const string& nomeMecanico) {
+// m√©todo que remove o mec√¢nico
+void removerMecanico(estacoes*& estacao, marcas*& marca, carro*& carros, int& numEstacoes, carrosReparados* raiz) {
 
-	estacoes* atual = estacao; // recebe a estaÁ„o atual
-
-	while (atual != nullptr) { // enquanto a atual for diferente de null
-		if (atual->mecanico == nomeMecanico) { // vÍ se o mec‚nico È o mesmo
-			carro* atualCarro = atual->primeiroCarro; // recebe o primeiro carro da estaÁ„o
-			while (atualCarro != nullptr) { // enquanto for diferente de null
-
-				cout << "O carro com ID " << atualCarro->idCarro << " foi removido da estaÁ„o " << atual->idET << ".\n"; // display da mensagem
-
-				carro* proximoCarro = atualCarro->proximoCarro; // proximo carro recebe o proximo carro do atual
-				delete atualCarro; // d· delete do carro atual
-				atualCarro = proximoCarro; // atualiza o atual para o prÛximo
-				atual->quantidadeCarros--; // diminui a quantidade de carros da estaÁ„o
-			}
-			atual->primeiroCarro = nullptr; // a estaÁ„o fica sem carros 
-		}
-		atual = atual->proximaEstacao; // passa para a pÛxima estaÁ„o 
-	}
-}
-
-// mÈtodo que remove o mec‚nico
-void removerMecanico(estacoes*& estacao, marcas*& marca, carro*& carros, int& numeroPalavrasMarcas, int& numEstacoes) {
-
-	string nomeMecanico; // v·riavel para receber o input do nome do mec‚nico
+	string nomeMecanico; // v√°riavel para receber o input do nome do mec√¢nico
 
 	getline(cin, nomeMecanico);
-	cout << "Introduza o nome do mec‚nico a remover: ";
-	getline(cin, nomeMecanico); // faz output da mensagem e atualiza a vari·vel
+	cout << "Introduza o nome do mec√¢nico a remover: ";
+	getline(cin, nomeMecanico); // faz output da mensagem e atualiza a vari√°vel
 
-	estacoes* atual = estacao; // recebe a estaÁ„o atual
-	estacoes* anterior = nullptr; // variavel de estaÁ„o anterior a null
-	string novoMecanico; // variavel para receber o nome do novo mec‚nico
+	estacoes* atual = estacao; // recebe a esta√ß√£o atual
+	estacoes* anterior = nullptr; // variavel de esta√ß√£o anterior a null
+	string novoMecanico; // variavel para receber o nome do novo mec√¢nico
 
 	while (atual != nullptr) { // enquanto a atual for diferente de null
-		if (atual->mecanico == nomeMecanico) { // se o nome introduzido pelo usuario dor igual ao da estaÁ„o
+		if (atual->mecanico == nomeMecanico) { // se o nome introduzido pelo usuario dor igual ao da esta√ß√£o
 			
-			removerTodosCarros(estacao, nomeMecanico); // invoca a funÁ„o removerTodosCarros
+			removerTodosCarros(estacao, nomeMecanico); // invoca a fun√ß√£o removerTodosCarros
+			removerNodo(raiz, atual->idET);
 
-			cout << "\nDÍ um nome ao mec‚nico: ";
+			cout << "\nD√™ um nome ao mec√¢nico: ";
 			getline(cin, novoMecanico); // pede ao usuario o nome do novo mecanico e atualiza a variavel
 			cout << "\n";
 
 			string marcaRandom = escolhePalavraRandomMarcas(marca); // recebe uma marca random
 
-			estacoes* novaEstacao = new estacoes(); // cria uma nova estaÁ„o
+			estacoes* novaEstacao = new estacoes(); // cria uma nova esta√ß√£o
 
 			novaEstacao->idET = atual->idET;
 			novaEstacao->capacidade = rand() % 4 + 2;
@@ -229,59 +206,162 @@ void removerMecanico(estacoes*& estacao, marcas*& marca, carro*& carros, int& nu
 			novaEstacao->mecanico = novoMecanico;
 			novaEstacao->marcaEspecializada = marcaRandom;
 			novaEstacao->proximaEstacao = nullptr;
-			novaEstacao->primeiroCarro = nullptr; // atribui ‡s vari·veis os valores
+			novaEstacao->primeiroCarro = nullptr; // atribui √†s vari√°veis os valores
 
 			if (anterior == nullptr) { // se o anterior for igual a null
-				estacao = atual->proximaEstacao; // a estaÁ„o vai ser igual ‡ prÛxima da atual
+				estacao = atual->proximaEstacao; // a esta√ß√£o vai ser igual √† pr√≥xima da atual
 			}
 			else {
-				anterior->proximaEstacao = atual->proximaEstacao; // a proxima estaÁ„o da anterior È igual ‡ prÛxima da atual
+				anterior->proximaEstacao = atual->proximaEstacao; // a proxima esta√ß√£o da anterior √© igual √† pr√≥xima da atual
 			}
 			delete atual; // apaga a atual
 
-			if (estacao == nullptr) { // se n„o tiver estaÁıes na lista ligada
-				estacao = novaEstacao; // adiciona ao inicio a nova estaÁ„o
+			if (estacao == nullptr) { // se n√£o tiver esta√ß√µes na lista ligada
+				estacao = novaEstacao; // adiciona ao inicio a nova esta√ß√£o
 			}
 			else {
-				estacoes* ultimaEstacao = estacao; // vari·vel que armazena a ultima estaÁ„o
-				while (ultimaEstacao->proximaEstacao != nullptr) { // faz o loop enquanto houver estaÁıes
+				estacoes* ultimaEstacao = estacao; // vari√°vel que armazena a ultima esta√ß√£o
+				while (ultimaEstacao->proximaEstacao != nullptr) { // faz o loop enquanto houver esta√ß√µes
 					ultimaEstacao = ultimaEstacao->proximaEstacao;
 				}
-				ultimaEstacao->proximaEstacao = novaEstacao; // adiciona ao final da lista ligada a nova estaÁ„o
+				ultimaEstacao->proximaEstacao = novaEstacao; // adiciona ao final da lista ligada a nova esta√ß√£o
 			}
 			break;
 		}
-		anterior = atual; // pıe a anterior como a atual
-		atual = atual->proximaEstacao; // passa para a prÛxima estaÁ„o
+		anterior = atual; // p√µe a anterior como a atual
+		atual = atual->proximaEstacao; // passa para a pr√≥xima esta√ß√£o
 	}
-	organizaETs(estacao); // organiza as estaÁıes
+	organizaETs(estacao); // organiza as esta√ß√µes
 	printETs(estacao); // print das ETs
 	printCars(carros); // print dos carros
 }
 
-// mÈtodo para adicionar uma estaÁ„o nova
+// m√©todo que remove todos os carros de uma esta√ß√£o
+void removerTodosCarros(estacoes*& estacao, const string& nomeMecanico) {
+
+	estacoes* atual = estacao; // recebe a esta√ß√£o atual
+
+	while (atual != nullptr) { // enquanto a atual for diferente de null
+		if (atual->mecanico == nomeMecanico) { // v√™ se o mec√¢nico √© o mesmo
+			carro* atualCarro = atual->primeiroCarro; // recebe o primeiro carro da esta√ß√£o
+			while (atualCarro != nullptr) { // enquanto for diferente de null
+
+				cout << "O carro com ID " << atualCarro->idCarro << " foi removido da esta√ß√£o " << atual->idET << ".\n"; // display da mensagem
+
+				carro* proximoCarro = atualCarro->proximoCarro; // proximo carro recebe o proximo carro do atual
+				delete atualCarro; // d√° delete do carro atual
+				atualCarro = proximoCarro; // atualiza o atual para o pr√≥ximo
+				atual->quantidadeCarros--; // diminui a quantidade de carros da esta√ß√£o
+			}
+			atual->primeiroCarro = nullptr; // a esta√ß√£o fica sem carros 
+		}
+		atual = atual->proximaEstacao; // passa para a p√≥xima esta√ß√£o 
+	}
+}
+
+// m√©todo para remover todos os carros da arvore de carros arranjados
+carrosReparados* removerNodo(carrosReparados* raiz, carrosReparados* noRem, carrosReparados* ant) {
+	if (ant == NULL) {
+		if (noRem->esquerda == NULL && noRem->direita == NULL) {
+			raiz = NULL;
+		}
+		else if (raiz->direita == NULL) {
+			raiz = raiz->esquerda;
+		}
+		else if (raiz->esquerda == NULL) {
+			raiz = raiz->direita;
+		}
+		else {
+			carrosReparados* aux = noRem->esquerda;
+			while (aux->direita != NULL) {
+				aux = aux->direita;
+			}
+			aux->direita = noRem->direita;
+
+			raiz = noRem->esquerda;
+		}
+	}
+	else {
+		if (noRem->direita == NULL) {
+			if (ant->idET > noRem->idET) {
+				ant->esquerda = noRem->esquerda;
+			}
+			else {
+				ant->direita = noRem->esquerda;
+			}
+		}
+		else if (noRem->esquerda == NULL) {
+			if (ant->idET > noRem->idET) {
+				ant->esquerda = noRem->direita;
+			}
+			else {
+				ant->direita = noRem->direita;
+			}
+		}
+		else {
+			carrosReparados* temp = noRem->esquerda;
+			while (temp->direita != NULL) {
+				temp = temp->direita;
+			}
+			temp->direita = noRem->direita;
+			if (ant->idET > noRem->idET) {
+				ant->esquerda = noRem->esquerda;
+			}
+			else {
+				ant->direita = noRem->esquerda;
+			}
+		}
+	}
+	delete noRem;
+	return raiz;
+}
+
+// m√©todo para remover todos os carros da arvore de carros arranjados
+carrosReparados* removerNodo(carrosReparados* raiz, int num) {
+	carrosReparados* noRem = raiz;
+	carrosReparados* ant = NULL;
+	while (noRem != NULL) {
+		if (noRem->idET == num) {
+			//while(existeCarrosComId(raiz, num))
+			raiz = removerNodo(raiz, noRem, ant);
+			noRem = raiz;
+			ant = NULL;
+		}
+		else if (num < noRem->idET) {
+			ant = noRem;
+			noRem = noRem->esquerda;
+		}
+		else {
+			ant = noRem;
+			noRem = noRem->direita;
+		}
+	}
+	return raiz;
+}
+
+// m√©todo para adicionar uma esta√ß√£o nova
 void adicionaET(estacoes*& estacao, marcas*& marca) {
 
-	int numEstacoes = 0; // v·riavel que armazena o n˙mero de estaÁıes
+	int numEstacoes = 0; // v√°riavel que armazena o n√∫mero de esta√ß√µes
 
-	estacoes* temp = estacao; // variavel para receber as estaÁıes para poder contar quantas existem
+	estacoes* temp = estacao; // variavel para receber as esta√ß√µes para poder contar quantas existem
 
-	while (temp != nullptr) { // enquanto houver estaÁıes
+	while (temp != nullptr) { // enquanto houver esta√ß√µes
 		numEstacoes++; // incrementa a variavel
-		temp = temp->proximaEstacao; // e passa para a prÛxima
+		temp = temp->proximaEstacao; // e passa para a pr√≥xima
 	}
 
-	string nomeMecanico; // vari·vel para receber o nome do mec‚nico
-	string marcaCarro; // var·vel para receber a marca do carro
+	string nomeMecanico; // vari√°vel para receber o nome do mec√¢nico
+	string marcaCarro; // var√°vel para receber a marca do carro
 
 	getline(cin, nomeMecanico);
-	cout << "\nIntroduza o nome do mec‚nico: ";
+	cout << "\nIntroduza o nome do mec√¢nico: ";
 	getline(cin, nomeMecanico);
 
 	cout << "\nIntroduza a marca: ";
-	getline(cin, marcaCarro); // faz os outputs para o usu·rio e atualiza as vari·veis
+	getline(cin, marcaCarro); // faz os outputs para o usu√°rio e atualiza as vari√°veis
 
-	estacoes* novaET = new estacoes(); // cria uma nova estaÁ„o
+	estacoes* novaET = new estacoes(); // cria uma nova esta√ß√£o
 
 	novaET->idET = numEstacoes + 1;
 	novaET->capacidade = rand() % 4 + 2;
@@ -293,7 +373,7 @@ void adicionaET(estacoes*& estacao, marcas*& marca) {
 	novaET->primeiroCarro = nullptr; // adiciona aos atributos os valores
 
 	novaET->proximaEstacao = estacao; 
-	estacao = novaET; // adiciona ‡ lista ligada das estaÁıes
+	estacao = novaET; // adiciona √† lista ligada das esta√ß√µes
 
 	ofstream marcasAdd; // abre o ficheiro das marcas para escrita
 	marcasAdd.open("marcas.txt", ios::app); // permite a escrita no final do ficheiro
@@ -303,19 +383,19 @@ void adicionaET(estacoes*& estacao, marcas*& marca) {
 		marcasAdd.close(); // fecha o ficheiro
 	}
 
-	lerMarcas(marca); // invoca o mÈtodo que lÍ o ficheiro das marcas, para adicionar ao ficheiro das marcas a nova introduzida
+	lerMarcas(marca); // invoca o m√©todo que l√™ o ficheiro das marcas, para adicionar ao ficheiro das marcas a nova introduzida
 }
 
-//mÈtodo que grava as oficinas assim como os carros dentro dela
+//m√©todo que grava as oficinas assim como os carros dentro dela
 void gravarEstacao(estacoes*& estacao, int& numEstacoes) {
 
-	estacoes* copia = estacao; // recebe a estaÁ„o atual
+	estacoes* copia = estacao; // recebe a esta√ß√£o atual
 
 	ofstream oficinas("oficinas.txt"); //cria um ficheiro de escrita
 
-	oficinas.clear(); //faz clear para limpar o ficheiro e n„o ficar guardado informaÁıes antigas
+	oficinas.clear(); //faz clear para limpar o ficheiro e n√£o ficar guardado informa√ß√µes antigas
 
-	if (oficinas.is_open()) { //verifica se consegue abrir o ficheiro para guardar a informaÁ„o
+	if (oficinas.is_open()) { //verifica se consegue abrir o ficheiro para guardar a informa√ß√£o
 		oficinas << "-\n";
 		oficinas << numEstacoes << "\n";
 		oficinas << "-\n";
@@ -325,7 +405,7 @@ void gravarEstacao(estacoes*& estacao, int& numEstacoes) {
 			oficinas << copia->quantidadeCarros << "\n";
 			oficinas << copia->faturacao << "\n";
 			oficinas << copia->mecanico << "\n";
-			oficinas << copia->marcaEspecializada << "\n"; // adiciona a cada linha do ficheiro a informaÁ„o
+			oficinas << copia->marcaEspecializada << "\n"; // adiciona a cada linha do ficheiro a informa√ß√£o
 
 			for (carro* carroAtual = copia->primeiroCarro; carroAtual != nullptr; carroAtual = carroAtual->proximoCarro) { //percorre todos os carros dentro da ET
 				oficinas << "--\n";
@@ -334,18 +414,18 @@ void gravarEstacao(estacoes*& estacao, int& numEstacoes) {
 				oficinas << carroAtual->dias << "\n";
 				oficinas << carroAtual->prioritario << "\n";
 				oficinas << carroAtual->marca << "\n";
-				oficinas << carroAtual->modelo << "\n"; // adiciona a cada linha do ficheiro a informaÁ„o do carro
+				oficinas << carroAtual->modelo << "\n"; // adiciona a cada linha do ficheiro a informa√ß√£o do carro
 			} oficinas << "-\n";
 
 			copia = copia->proximaEstacao;
 		}
 	}
 	else {
-		cout << "N„o foi possivel abrir o ficheiro oficinas\n";
+		cout << "N√£o foi possivel abrir o ficheiro oficinas\n";
 	}
 }
 
-//mÈtodo que grava a fila de espera
+//m√©todo que grava a fila de espera
 void gravarFilaDeEspera(carro*& carros) {
 
 	int numCarros = 0;
@@ -356,7 +436,7 @@ void gravarFilaDeEspera(carro*& carros) {
 
 	fila.clear(); //faz o clear do ficheiro
 
-	if (fila.is_open()) { //verifica se o ficheiro pode ser aberto para ser guardada as informaÁıes
+	if (fila.is_open()) { //verifica se o ficheiro pode ser aberto para ser guardada as informa√ß√µes
 		fila << "-\n";
 		fila << numCarros << "\n";
 		while(copiaCarros != nullptr) { //faz o loop pela quantidade de carros na fila de espera
@@ -366,17 +446,26 @@ void gravarFilaDeEspera(carro*& carros) {
 			fila << copiaCarros->dias << "\n";
 			fila << copiaCarros->prioritario << "\n";
 			fila << copiaCarros->marca << "\n";
-			fila << copiaCarros->modelo << "\n"; // adiciona a cada linha do ficheiro as informaÁıes do carro
+			fila << copiaCarros->modelo << "\n"; // adiciona a cada linha do ficheiro as informa√ß√µes do carro
 
 			copiaCarros = copiaCarros->proximoCarro;
 		}
 	}
 	else {
-		cout << "N„o foi possivel abrir o ficheiro filaEspera\n";
+		cout << "N√£o foi possivel abrir o ficheiro filaEspera\n";
 	}
 }
 
-// mÈtodo para gravar as arvores
+// m√©todo para dar o nome ao ficheiro e invocar o m√©todo para gravar a arvore
+void nomeFicheiro(carrosReparados* raiz) {
+	ofstream arvore("arvores.txt");
+
+	arvore.clear();
+
+	gravarArvores(raiz, arvore);
+}
+
+// m√©todo para gravar as arvores
 void gravarArvores(carrosReparados* raiz, ofstream& arvore) {
 
 	if (raiz == nullptr) {
@@ -392,86 +481,27 @@ void gravarArvores(carrosReparados* raiz, ofstream& arvore) {
 	arvore << raiz->carros->dias << "\n";
 	arvore << raiz->carros->prioritario << "\n";
 	arvore << raiz->carros->marca << "\n";
-	arvore << raiz->carros->modelo << "\n"; // adiciona a cada linha as informaÁıes do carro e a et que pertence
+	arvore << raiz->carros->modelo << "\n"; // adiciona a cada linha as informa√ß√µes do carro e a et que pertence
 
 	gravarArvores(raiz->esquerda, arvore);
 }
 
-// mÈtodo para dar o nome ao ficheiro e invocar o mÈtodo para gravar a arvore
-void nomeFicheiro(carrosReparados* raiz) {
-	ofstream arvore("arvores.txt");
-
-	arvore.clear();
-
-	gravarArvores(raiz, arvore);
-}
-
-// mÈtodo para carregar a fila de espera
-void uploadFilaDeEspera(carro*& carros, int& numCarrosTotal) {
-
-	carro* primeiroCarro = nullptr; // variavel do tipo carro a null
-	carro* ultimoCarro = nullptr; // variavel do tipo carro a null
-
-	ifstream filaEspera("filaEspera.txt"); // abre o ficheiro da fila de espera para leitura
-
-	if (filaEspera.is_open()) {
-		string linha;
-		getline(filaEspera, linha); // prÛximo "-"
-		getline(filaEspera, linha);
-		getline(filaEspera, linha); // prÛximo "-"
-
-		while (getline(filaEspera, linha)) {
-			carro* novoCarro = new carro(); // cria um novo carro
-			novoCarro->idCarro = stoi(linha);
-			getline(filaEspera, linha);
-			novoCarro->tempoMax = stoi(linha);
-			getline(filaEspera, linha);
-			novoCarro->dias = stoi(linha);
-			getline(filaEspera, linha);
-			novoCarro->prioritario = stoi(linha);
-			getline(filaEspera, linha);
-			novoCarro->marca = linha;
-			getline(filaEspera, linha);
-			novoCarro->modelo = linha;
-			getline(filaEspera, linha);
-
-			novoCarro->proximoCarro = nullptr; // adiciona ao novo carro as informaÁıes do ficheiro aos devidos atributos
-
-			if (primeiroCarro == nullptr) { // se o primeiro carro for nulll
-				primeiroCarro = novoCarro; // adiciona o novo carro ao inicio da lista 
-				ultimoCarro = novoCarro; // e atualiza a vari·vel de ultimo carro
-				numCarrosTotal = primeiroCarro->idCarro; // atualiza a vari·vel numero de carros totais, para ser usada na criaÁ„o de novos carros
-			}
-			else { // se n„o
-				ultimoCarro->proximoCarro = novoCarro; // o proximo carro ao ultimo vai ser o novo criado
-				ultimoCarro = novoCarro; // e atualiza a variavÈl de ultimo carro
-				if (ultimoCarro->idCarro > numCarrosTotal) { // se o id do ultimo carro adicionado for maior que a vari·vel numero de carros atual
-					numCarrosTotal = ultimoCarro->idCarro; // È atualizada essa v·riavel para um n˙mero mais alto
-				}
-				
-			}
-		}
-	}
-	filaEspera.close(); // fecha o ficheiro
-
-	carros = primeiroCarro; // atualiza a lista ligada de carros, para a nova criada
-}
-
+// m√©todo para carregar as esta√ß√µes
 void uploadEstacao(estacoes*& estacao, int& numEstacoes, int& numCarrosTotal) {
-	estacoes* primeiraEstacao = nullptr; // variavel de primeira estÁ„o a null
-	estacoes* ultimaEstacao = nullptr; // variavel de ultima estaÁ„o a ull
+	estacoes* primeiraEstacao = nullptr; // variavel de primeira est√ß√£o a null
+	estacoes* ultimaEstacao = nullptr; // variavel de ultima esta√ß√£o a ull
 
 	ifstream oficinas("oficinas.txt"); // abre o ficheiro para leitura
 
 	if (oficinas.is_open()) {
 		string linha;
-		getline(oficinas, linha); // lÍ a primeira linha do arquivo (deve ser "-")
-		getline(oficinas, linha); // lÍ a segunda linha do arquivo (n˙mero de estaÁıes)
+		getline(oficinas, linha); // l√™ a primeira linha do arquivo (deve ser "-")
+		getline(oficinas, linha); // l√™ a segunda linha do arquivo (n√∫mero de esta√ß√µes)
 		numEstacoes = stoi(linha);
-		getline(oficinas, linha); // lÍ a prÛxima linha (deve ser "-")
+		getline(oficinas, linha); // l√™ a pr√≥xima linha (deve ser "-")
 
 		while (getline(oficinas, linha)) {
-			estacoes* novaEstacao = new estacoes(); // cria uma nova estaÁ„o
+			estacoes* novaEstacao = new estacoes(); // cria uma nova esta√ß√£o
 			novaEstacao->idET = stoi(linha);
 			getline(oficinas, linha);
 			novaEstacao->capacidade = stoi(linha);
@@ -484,11 +514,11 @@ void uploadEstacao(estacoes*& estacao, int& numEstacoes, int& numCarrosTotal) {
 			getline(oficinas, linha);
 			novaEstacao->marcaEspecializada = linha;
 			novaEstacao->proximaEstacao = nullptr;
-			novaEstacao->primeiroCarro = nullptr; // d· os valores do ficheiro aosatributos da estaÁ„o
+			novaEstacao->primeiroCarro = nullptr; // d√° os valores do ficheiro aosatributos da esta√ß√£o
 
 			ofstream marcasAdd;
-			marcasAdd.open("marcas.txt", ios::app); // adiciona ao ficheiro da marcas a marca da estaÁ„o caso seja guardada de uma utilizaÁ„o do programa anterior 
-												   // uma marca n„o existente no ficheiro original
+			marcasAdd.open("marcas.txt", ios::app); // adiciona ao ficheiro da marcas a marca da esta√ß√£o caso seja guardada de uma utiliza√ß√£o do programa anterior 
+												   // uma marca n√£o existente no ficheiro original
 			if (marcasAdd.is_open()) {
 				marcasAdd << "\n" << linha;
 				marcasAdd.close();
@@ -510,13 +540,13 @@ void uploadEstacao(estacoes*& estacao, int& numEstacoes, int& numCarrosTotal) {
 				novoCarro->marca = linha;
 				getline(oficinas, linha);
 				novoCarro->modelo = linha;
-				novoCarro->proximoCarro = nullptr; // d· os valores do ficheiro aos atributos do carro
+				novoCarro->proximoCarro = nullptr; // d√° os valores do ficheiro aos atributos do carro
 
-				if (novaEstacao->primeiroCarro == nullptr) { // se a lista ligada da estaÁ„o estier vazia 
-					novaEstacao->primeiroCarro = novoCarro; // adiciona esse novo carro ao inicio da estaÁ„o
+				if (novaEstacao->primeiroCarro == nullptr) { // se a lista ligada da esta√ß√£o estier vazia 
+					novaEstacao->primeiroCarro = novoCarro; // adiciona esse novo carro ao inicio da esta√ß√£o
 				}
 				else {
-					carro* ultimoCarro = novaEstacao->primeiroCarro; // se n„o percorre atÈ ao final da lista 
+					carro* ultimoCarro = novaEstacao->primeiroCarro; // se n√£o percorre at√© ao final da lista 
 					while (ultimoCarro->proximoCarro != nullptr) {
 						ultimoCarro = ultimoCarro->proximoCarro;
 					}
@@ -526,23 +556,74 @@ void uploadEstacao(estacoes*& estacao, int& numEstacoes, int& numCarrosTotal) {
 				index++;
 			}
 
-			if (primeiraEstacao == nullptr) { // se a primeira estaÁ„o for null
+			if (primeiraEstacao == nullptr) { // se a primeira esta√ß√£o for null
 				primeiraEstacao = novaEstacao; 
-				ultimaEstacao = novaEstacao; // adicona a estas listas ligadas a nova estaÁ„o
+				ultimaEstacao = novaEstacao; // adicona a estas listas ligadas a nova esta√ß√£o
 			}
 			else {
-				ultimaEstacao->proximaEstacao = novaEstacao; // se n„o adiciona depois da ultima estaÁ„o a nova estaÁ„o
-				ultimaEstacao = novaEstacao; // e a ultima estaÁ„o passa a ser esta nova
+				ultimaEstacao->proximaEstacao = novaEstacao; // se n√£o adiciona depois da ultima esta√ß√£o a nova esta√ß√£o
+				ultimaEstacao = novaEstacao; // e a ultima esta√ß√£o passa a ser esta nova
 			}
 		}
 	}
 	oficinas.close(); // fecha o ficheiro
 
-	estacao = primeiraEstacao; // atualiza a lista ligada de estaÁıes para esta nova
+	estacao = primeiraEstacao; // atualiza a lista ligada de esta√ß√µes para esta nova
 
 }
 
-// mÈtodo para inserir os carros na arvore
+// m√©todo para carregar a fila de espera
+void uploadFilaDeEspera(carro*& carros, int& numCarrosTotal) {
+
+	carro* primeiroCarro = nullptr; // variavel do tipo carro a null
+	carro* ultimoCarro = nullptr; // variavel do tipo carro a null
+
+	ifstream filaEspera("filaEspera.txt"); // abre o ficheiro da fila de espera para leitura
+
+	if (filaEspera.is_open()) {
+		string linha;
+		getline(filaEspera, linha); // pr√≥ximo "-"
+		getline(filaEspera, linha);
+		getline(filaEspera, linha); // pr√≥ximo "-"
+
+		while (getline(filaEspera, linha)) {
+			carro* novoCarro = new carro(); // cria um novo carro
+			novoCarro->idCarro = stoi(linha);
+			getline(filaEspera, linha);
+			novoCarro->tempoMax = stoi(linha);
+			getline(filaEspera, linha);
+			novoCarro->dias = stoi(linha);
+			getline(filaEspera, linha);
+			novoCarro->prioritario = stoi(linha);
+			getline(filaEspera, linha);
+			novoCarro->marca = linha;
+			getline(filaEspera, linha);
+			novoCarro->modelo = linha;
+			getline(filaEspera, linha);
+
+			novoCarro->proximoCarro = nullptr; // adiciona ao novo carro as informa√ß√µes do ficheiro aos devidos atributos
+
+			if (primeiroCarro == nullptr) { // se o primeiro carro for nulll
+				primeiroCarro = novoCarro; // adiciona o novo carro ao inicio da lista 
+				ultimoCarro = novoCarro; // e atualiza a vari√°vel de ultimo carro
+				numCarrosTotal = primeiroCarro->idCarro; // atualiza a vari√°vel numero de carros totais, para ser usada na cria√ß√£o de novos carros
+			}
+			else { // se n√£o
+				ultimoCarro->proximoCarro = novoCarro; // o proximo carro ao ultimo vai ser o novo criado
+				ultimoCarro = novoCarro; // e atualiza a variav√©l de ultimo carro
+				if (ultimoCarro->idCarro > numCarrosTotal) { // se o id do ultimo carro adicionado for maior que a vari√°vel numero de carros atual
+					numCarrosTotal = ultimoCarro->idCarro; // √© atualizada essa v√°riavel para um n√∫mero mais alto
+				}
+				
+			}
+		}
+	}
+	filaEspera.close(); // fecha o ficheiro
+
+	carros = primeiroCarro; // atualiza a lista ligada de carros, para a nova criada
+}
+
+// m√©todo para inserir os carros arranjados na arvore a partir de um ficheiro
 void uploadArvores(carrosReparados*& raiz, const string ficheiro) {
 
 	ifstream arvores(ficheiro);
@@ -567,7 +648,7 @@ void uploadArvores(carrosReparados*& raiz, const string ficheiro) {
 			getline(arvores, linha);
 			novoCarro->marca = linha;
 			getline(arvores, linha);
-			novoCarro->modelo = linha; // d· os valores ao carro
+			novoCarro->modelo = linha; // d√° os valores ao carro
 
 			inserirNaArvore(raiz, idET, novoCarro); // insere na arvore
 		}
@@ -579,25 +660,25 @@ void uploadArvores(carrosReparados*& raiz, const string ficheiro) {
 	arvores.close(); // fecha o ficheiro
 }
 
-// mÈtodo para remover marcas duplicadas do ficheiro de marcas
+// m√©todo para remover marcas duplicadas do ficheiro de marcas
 void removeMarcasDuplicadas(marcas* marca) {
 
 	marcas* atual = marca; // recebe a marca atual
 
 	while (atual != nullptr) { // se a marca atual for diferente de null
 		marcas* duplicado = atual; // copia da marca atual
-		while (duplicado->proximaMarca != nullptr) // se a prÛxima marca ‡ duplicada for null
+		while (duplicado->proximaMarca != nullptr) // se a pr√≥xima marca √† duplicada for null
 		{
 			if (duplicado->proximaMarca->marca == atual->marca) { // se a marca for a mesma das duas
 				marcas* novaLista = duplicado->proximaMarca; // cria uma nova lista e adiciona a proxima marca 
-				duplicado->proximaMarca = novaLista->proximaMarca; // proxima marca da duplicada È a proxima da nova lista
+				duplicado->proximaMarca = novaLista->proximaMarca; // proxima marca da duplicada √© a proxima da nova lista
 				delete novaLista; // apaga a nova lista
 			}
 			else {
-				duplicado = duplicado->proximaMarca; // se n„o passa para a prÛxima marca
+				duplicado = duplicado->proximaMarca; // se n√£o passa para a pr√≥xima marca
 			}
 		}
-		atual = atual->proximaMarca; // passa para a prÛxima marca
+		atual = atual->proximaMarca; // passa para a pr√≥xima marca
 	}
 
 	ofstream marcas("marcas.txt"); // abre o ficheiro para escrita
@@ -614,29 +695,7 @@ void removeMarcasDuplicadas(marcas* marca) {
 	}
 }
 
-// mÈtodo que faz o print da arvore da estaÁ„o
-void imprimeArvore(carrosReparados* raiz, int nivel, int idET) {
-
-	if (raiz == nullptr) {
-		cout << "\n";
-		return;
-	}
-
-	imprimeArvore(raiz->direita, nivel + 1, idET);
-
-	// parte onde verifica se È a ET selecionada pelo user
-	if (raiz->idET == idET) {
-		for (int i = 0; i < nivel; i++) {
-			cout << "\t";
-		}
-
-		cout <<"ID: " << raiz->carros->idCarro << " | Modelo: " << raiz->carros->modelo << "\n";
-	}
-
-	imprimeArvore(raiz->esquerda, nivel + 1, idET);
-}
-
-// mÈtodo para invocar o mÈtodo que printa a arvore certa
+// m√©todo para invocar o m√©todo que printa a arvore certa
 void imprimirArvorePorEstacao(carrosReparados* raiz) {
 
 	int idDaET = 0;
@@ -647,22 +706,43 @@ void imprimirArvorePorEstacao(carrosReparados* raiz) {
 	imprimeArvore(raiz, 0, idDaET);
 }
 
+// m√©todo que faz o print da arvore da esta√ß√£o
+void imprimeArvore(carrosReparados* raiz, int nivel, int idET) {
 
-void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int& numeroPalavrasMarcas, int numCarros, carro*& carros, int& numCarrosTotal, carrosReparados*& raiz) {
+	if (raiz == nullptr) {
+		cout << "\n";
+		return;
+	}
+
+	imprimeArvore(raiz->direita, nivel + 1, idET);
+
+	// parte onde verifica se √© a ET selecionada pelo user
+	if (raiz->idET == idET) {
+		for (int i = 0; i < nivel; i++) {
+			cout << "\t";
+		}
+
+		cout << "idET: " << raiz->idET << " | ID: " << raiz->carros->idCarro << " | Modelo: " << raiz->carros->modelo << "\n";
+	}
+
+	imprimeArvore(raiz->esquerda, nivel + 1, idET);
+}
+
+void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int numCarros, carro*& carros, int& numCarrosTotal, carrosReparados*& raiz) {
 
 
 	int options;
 
 	cout << "\n***** Bem vindo gestor *****\n";
-	cout << "(1).ReparaÁ„o Manual\n";
-	cout << "(2).Atualizar tempo de reparaÁ„o\n";
+	cout << "(1).Repara√ß√£o Manual\n";
+	cout << "(2).Atualizar tempo de repara√ß√£o\n";
 	cout << "(3).Adicionar Prioridade\n";
-	cout << "(4).Remover Mec‚nico\n";
-	cout << "(5).Adicionar EstaÁ„o\n";
+	cout << "(4).Remover Mec√¢nico\n";
+	cout << "(5).Adicionar Esta√ß√£o\n";
 	cout << "(6).Gravar Oficina\n";
 	cout << "(7).Carregar Oficina\n";
 	cout << "(8).Imprimir Oficina\n";
-	cout << "Selecione a sua opÁ„o:\n";
+	cout << "Selecione a sua op√ß√£o:\n";
 	cin >> options;
 
 	switch (options)
@@ -691,7 +771,7 @@ void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int& numeroPala
 
 	case 4:
 
-		removerMecanico(estacao, marca, carros, numeroPalavrasMarcas, numEstacoes);
+		removerMecanico(estacao, marca, carros, numEstacoes, raiz);
 
 		break;
 
@@ -733,7 +813,7 @@ void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int& numeroPala
 
 	default:
 
-		cout << "N„o selecionou uma opÁ„o v·lida\n";
+		cout << "N√£o selecionou uma op√ß√£o v√°lida\n";
 
 		break;
 	}

@@ -13,9 +13,6 @@ int main() {
     srand(time(NULL));
     locale::global(locale(""));
 
-    int numeroPalavrasMarcas = 0;
-    int numeroPalavrasModelos = 0;
-
     marcas* marca = nullptr;
 
     modelos* modelo = nullptr;
@@ -29,7 +26,7 @@ int main() {
 
     carrosReparados* raiz = nullptr;
 
-    menu(numeroPalavrasMarcas, numeroPalavrasModelos, marca, modelo, carros, estacao, raiz);
+    menu(marca, modelo, carros, estacao, raiz);
 
     limpaMarcas();
 

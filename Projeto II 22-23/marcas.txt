@@ -44,3 +44,5 @@ Toyota
 VinFast
 Volkswagen
 Volvo
+
+novaMarca
