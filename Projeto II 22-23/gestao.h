@@ -39,4 +39,6 @@ void imprimirArvorePorEstacao(carrosReparados* raiz);
 
 void imprimeArvore(carrosReparados* raiz, int nivel, int idET);
 
+void imprimirModelo(carrosReparados* raiz, int idET);
+
 void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int numCarros, carro*& carros, int& numCarrosTotal, carrosReparados*& raiz);

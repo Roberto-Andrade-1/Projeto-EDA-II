@@ -122,7 +122,7 @@ void estacaoTrabalho(estacoes*& estacao, int& numET, int& numEstacoes, marcas*& 
 
         string marcaRandom = escolhePalavraRandomMarcas(marca); // retira uma marca random da lista de marcas
 
-        cout << "Dê um nome ao mecânico " << i + 1 << ": \n"; // põe na consola a mensagem para dar um nome
+        cout << "\nDê um nome ao mecânico " << i + 1 << ": "; // põe na consola a mensagem para dar um nome
         getline(cin, nome); // recebe o input do usuario
 
         estacoes* novaET = new estacoes(); // cria uma nova estação
@@ -416,7 +416,7 @@ void printETs(estacoes* estacao) {
 // método para fazer output dos carros na fila de espera
 void printCars(carro* carros) {
 
-    cout << "\nLista de espera: \n";
+    cout << "\nLista de espera: \n\n";
     while (carros != nullptr) { // percorre os carros 
         cout << "Carro ID: " << carros->idCarro << " | "
             << "Marca: " << carros->marca << " | "
@@ -519,7 +519,7 @@ void menu(marcas*& marca, modelos*& modelo, carro*& carros, estacoes*& estacao, 
 
         cout << "\n\nDia (s)eguinte ********* (g)estão\n"
             << "       (e)scapar às contas\n"
-            << "Selecione a sua opção:\n";
+            << "\nSelecione a sua opção: ";
         cin >> opcao;
 
         switch (opcao)

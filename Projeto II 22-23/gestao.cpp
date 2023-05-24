@@ -698,12 +698,36 @@ void removeMarcasDuplicadas(marcas* marca) {
 // método para invocar o método que printa a arvore certa
 void imprimirArvorePorEstacao(carrosReparados* raiz) {
 
+	int opcao = 0;
 	int idDaET = 0;
 	cout << "\nIntroduza o ID da ET que deseja imprimir os carros reparados: ";
 	cin >> idDaET;
 	cout << "\n";
 
-	imprimeArvore(raiz, 0, idDaET);
+	cout << "Pretende imprimir os dados por ordem alfabetica de modelo (1), ou por árvore (2)?\n";
+	cin >> opcao;
+	cout << "\n";
+
+	switch (opcao)
+	{
+	case 1:
+
+		imprimirModelo(raiz, idDaET);
+
+		break;
+
+	case 2:
+
+		imprimeArvore(raiz, 0, idDaET);
+
+		break;
+
+	default:
+
+		cout << "Escolha uma das opções, 1 ou 2\n";
+
+		break;
+	}
 }
 
 // método que faz o print da arvore da estação
@@ -722,10 +746,26 @@ void imprimeArvore(carrosReparados* raiz, int nivel, int idET) {
 			cout << "\t";
 		}
 
-		cout << "idET: " << raiz->idET << " | ID: " << raiz->carros->idCarro << " | Modelo: " << raiz->carros->modelo << "\n";
+		cout << "ID: " << raiz->carros->idCarro << " | Modelo: " << raiz->carros->modelo << "\n";
 	}
 
 	imprimeArvore(raiz->esquerda, nivel + 1, idET);
+}
+
+void imprimirModelo(carrosReparados* raiz, int idET) {
+
+	if (raiz != nullptr) {
+		imprimirModelo(raiz->esquerda, idET);
+		if (raiz->idET == idET) {
+			cout << "ID: " << raiz->carros->idCarro
+				<< " | Marca: " << raiz->carros->marca
+				<< " | Modelo: " << raiz->carros->modelo
+				<< " | Prioritário: " << (raiz->carros->prioritario ? "Sim" : "Não")
+				<< " | Tempo de reparação: " << raiz->carros->tempoMax
+				<< " | Dias na oficina: " << raiz->carros->dias << "\n";
+		}
+		imprimirModelo(raiz->direita, idET);
+	}
 }
 
 void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int numCarros, carro*& carros, int& numCarrosTotal, carrosReparados*& raiz) {
@@ -734,7 +774,7 @@ void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int numCarros, 
 	int options;
 
 	cout << "\n***** Bem vindo gestor *****\n";
-	cout << "(1).Reparação Manual\n";
+	cout << "\n(1).Reparação Manual\n";
 	cout << "(2).Atualizar tempo de reparação\n";
 	cout << "(3).Adicionar Prioridade\n";
 	cout << "(4).Remover Mecânico\n";
@@ -742,7 +782,7 @@ void gestao(estacoes*& estacao, int numEstacoes, marcas*& marca, int numCarros, 
 	cout << "(6).Gravar Oficina\n";
 	cout << "(7).Carregar Oficina\n";
 	cout << "(8).Imprimir Oficina\n";
-	cout << "Selecione a sua opção:\n";
+	cout << "\nSelecione a sua opção: ";
 	cin >> options;
 
 	switch (options)
